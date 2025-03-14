@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: example
+      MYSQL_ROOT_PASSWORD: password
