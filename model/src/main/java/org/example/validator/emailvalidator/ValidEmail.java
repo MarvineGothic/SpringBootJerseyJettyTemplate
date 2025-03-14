@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.validator.emailvalidator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

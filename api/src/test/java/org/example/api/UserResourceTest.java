@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.example.database.repository.AddressRepository;
 import org.example.database.repository.UserRepository;
+import org.example.model.error.ResponseError;
 import org.example.model.request.UserRequestDto;
 import org.example.model.response.UserResponseDto;
 import org.junit.Before;
@@ -48,6 +49,16 @@ public class UserResourceTest {
     }
 
     @Test
+    public void getException() {
+        Response response = client.target(uri).path(BASE_URL).path("/exception")
+                .request(MediaType.TEXT_PLAIN).get();
+        assertEquals(400, response.getStatus());
+        var serviceError = response.readEntity(ResponseError.class);
+        assertEquals("Some exception", serviceError.getError());
+        assertEquals(400, serviceError.getCode());
+    }
+
+    @Test
     public void testGreeting() {
         Response response = client.target(uri).path(BASE_URL).path("/greeting")
                 .request(MediaType.TEXT_PLAIN).get();
@@ -61,8 +72,8 @@ public class UserResourceTest {
         Response response = client.target(uri).path(BASE_URL).path("/" + 1L)
                 .request(MediaType.APPLICATION_JSON).get();
         assertEquals(404, response.getStatus());
-//        var errorResponse = response.readEntity(Error.class);
-//        assertEquals("Hello, world", errorResponse.getMessage());
+//        var errorResponse = response.readEntity(ResponseError.class);
+//        assertEquals("Hello, world", errorResponse.getErrorMessage());
     }
 
     @Test
@@ -113,7 +124,7 @@ public class UserResourceTest {
 
         try (Response response = client.target(uri).path(BASE_URL)
                 .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestDto))) {
-            assertEquals(200, response.getStatus());
+            assertEquals(201, response.getStatus());
             var user = response.readEntity(UserResponseDto.class);
             assertEquals("John", user.getFirstName());
         }
@@ -132,7 +143,7 @@ public class UserResourceTest {
 
         try (Response response = client.target(uri).path(BASE_URL)
                 .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestDto))) {
-            assertEquals(200, response.getStatus());
+            assertEquals(201, response.getStatus());
             var user = response.readEntity(UserResponseDto.class);
             assertEquals("John", user.getFirstName());
         }

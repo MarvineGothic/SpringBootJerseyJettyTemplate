@@ -6,6 +6,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import org.example.model.error.ServiceException;
 import org.example.model.request.UserRequestDto;
 import org.example.service.UserService;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,13 @@ public class UserResource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response getGreeting() {
         return Response.ok("Hello, world").build();
+    }
+
+    @GET
+    @Path("/exception")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response throwException() throws ServiceException {
+        throw new ServiceException("Some exception", Response.Status.BAD_REQUEST.getStatusCode());
     }
 
     @GET
@@ -41,9 +49,12 @@ public class UserResource {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(@Valid @NotNull UserRequestDto userRequestDto) {
         try {
-            return Response.ok(userService.createUser(userRequestDto)).build();
+            return Response
+                    .status(Response.Status.CREATED)
+                    .entity(userService.createUser(userRequestDto)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
