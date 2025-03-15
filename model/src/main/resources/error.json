@@ -1,0 +1,902 @@
+[
+  {
+    "code": 0,
+    "error": "Ok",
+    "http_code": 200
+  },
+  {
+    "code": 1,
+    "error": "Invalid request",
+    "http_code": 400
+  },
+  {
+    "code": 2,
+    "error": "Internal error",
+    "http_code": 500
+  },
+  {
+    "code": 3,
+    "error": "Invalid user or password",
+    "http_code": 400
+  },
+  {
+    "code": 4,
+    "error": "No accounts for user",
+    "http_code": 400
+  },
+  {
+    "code": 5,
+    "error": "Unknown account",
+    "http_code": 404
+  },
+  {
+    "code": 6,
+    "error": "Not authenticated",
+    "http_code": 401
+  },
+  {
+    "code": 7,
+    "error": "Unauthorized",
+    "http_code": 403
+  },
+  {
+    "code": 8,
+    "error": "Not found",
+    "http_code": 404
+  },
+  {
+    "code": 9,
+    "error": "Customer not found",
+    "http_code": 404
+  },
+  {
+    "code": 10,
+    "error": "Subscription plan not found",
+    "http_code": 404
+  },
+  {
+    "code": 11,
+    "error": "Duplicate handle",
+    "http_code": 400
+  },
+  {
+    "code": 12,
+    "error": "Subscription not found",
+    "http_code": 404
+  },
+  {
+    "code": 13,
+    "error": "Subscription expired",
+    "http_code": 400
+  },
+  {
+    "code": 14,
+    "error": "Must be in future",
+    "http_code": 400
+  },
+  {
+    "code": 15,
+    "error": "Account not found",
+    "http_code": 404
+  },
+  {
+    "code": 17,
+    "error": "User not found",
+    "http_code": 404
+  },
+  {
+    "code": 18,
+    "error": "Missing customer",
+    "http_code": 400
+  },
+  {
+    "code": 19,
+    "error": "Card not found",
+    "http_code": 404
+  },
+  {
+    "code": 20,
+    "error": "Test data not allowed for live account",
+    "http_code": 400
+  },
+  {
+    "code": 21,
+    "error": "Live data not allowed for test account",
+    "http_code": 400
+  },
+  {
+    "code": 22,
+    "error": "Subscription cancelled",
+    "http_code": 400
+  },
+  {
+    "code": 23,
+    "error": "From date after to date",
+    "http_code": 400
+  },
+  {
+    "code": 24,
+    "error": "Missing amount",
+    "http_code": 400
+  },
+  {
+    "code": 25,
+    "error": "Additional cost not pending",
+    "http_code": 400
+  },
+  {
+    "code": 26,
+    "error": "Additional cost not found",
+    "http_code": 404
+  },
+  {
+    "code": 27,
+    "error": "Credit not found",
+    "http_code": 404
+  },
+  {
+    "code": 28,
+    "error": "Credit not pending",
+    "http_code": 400
+  },
+  {
+    "code": 29,
+    "error": "Invoice already cancelled",
+    "http_code": 400
+  },
+  {
+    "code": 30,
+    "error": "Invoice has active transactions",
+    "http_code": 400
+  },
+  {
+    "code": 31,
+    "error": "Invoice not found",
+    "http_code": 404
+  },
+  {
+    "code": 32,
+    "error": "Customer has non expired subscriptions",
+    "http_code": 400
+  },
+  {
+    "code": 33,
+    "error": "Customer has pending invoices",
+    "http_code": 400
+  },
+  {
+    "code": 34,
+    "error": "Invalid card token",
+    "http_code": 400
+  },
+  {
+    "code": 35,
+    "error": "Missing card",
+    "http_code": 400
+  },
+  {
+    "code": 36,
+    "error": "Missing card token",
+    "http_code": 400
+  },
+  {
+    "code": 37,
+    "error": "Start date cannot be more than one period away in the past",
+    "http_code": 400
+  },
+  {
+    "code": 38,
+    "error": "Card not allowed for signup method",
+    "http_code": 400
+  },
+  {
+    "code": 39,
+    "error": "Card token not allowed for signup method",
+    "http_code": 400
+  },
+  {
+    "code": 40,
+    "error": "Payment method not found",
+    "http_code": 404
+  },
+  {
+    "code": 41,
+    "error": "Payment method not inactive",
+    "http_code": 400
+  },
+  {
+    "code": 42,
+    "error": "Payment method not active",
+    "http_code": 400
+  },
+  {
+    "code": 43,
+    "error": "Not implemented",
+    "http_code": 501
+  },
+  {
+    "code": 44,
+    "error": "Dunning plan not found",
+    "http_code": 404
+  },
+  {
+    "code": 45,
+    "error": "Organisation not found",
+    "http_code": 404
+  },
+  {
+    "code": 46,
+    "error": "Webhook not found",
+    "http_code": 404
+  },
+  {
+    "code": 47,
+    "error": "Event not found",
+    "http_code": 404
+  },
+  {
+    "code": 48,
+    "error": "Dunning plan in use",
+    "http_code": 400
+  },
+  {
+    "code": 49,
+    "error": "Last dunning plan",
+    "http_code": 400
+  },
+  {
+    "code": 50,
+    "error": "Search error",
+    "http_code": 400
+  },
+  {
+    "code": 51,
+    "error": "Private key not found",
+    "http_code": 404
+  },
+  {
+    "code": 52,
+    "error": "Public key not found",
+    "http_code": 404
+  },
+  {
+    "code": 53,
+    "error": "Mail not found",
+    "http_code": 404
+  },
+  {
+    "code": 54,
+    "error": "No order lines for invoice",
+    "http_code": 400
+  },
+  {
+    "code": 55,
+    "error": "Agreement not found",
+    "http_code": 404
+  },
+  {
+    "code": 56,
+    "error": "Multiple agreements",
+    "http_code": 400
+  },
+  {
+    "code": 57,
+    "error": "Duplicate email",
+    "http_code": 400
+  },
+  {
+    "code": 58,
+    "error": "Invalid group",
+    "http_code": 400
+  },
+  {
+    "code": 59,
+    "error": "User blocked due to failed logins",
+    "http_code": 400
+  },
+  {
+    "code": 60,
+    "error": "Invalid template",
+    "http_code": 400
+  },
+  {
+    "code": 61,
+    "error": "Mail type not found",
+    "http_code": 404
+  },
+  {
+    "code": 62,
+    "error": "Card gateway state live/test much match account state live/test",
+    "http_code": 400
+  },
+  {
+    "code": 63,
+    "error": "Subscription has pending or dunning invoices",
+    "http_code": 400
+  },
+  {
+    "code": 64,
+    "error": "Invoice not settled",
+    "http_code": 400
+  },
+  {
+    "code": 65,
+    "error": "Refund amount too high",
+    "http_code": 400
+  },
+  {
+    "code": 66,
+    "error": "Refund failed",
+    "http_code": 500
+  },
+  {
+    "code": 67,
+    "error": "The subdomain is reserved",
+    "http_code": 400
+  },
+  {
+    "code": 68,
+    "error": "User email already verified",
+    "http_code": 400
+  },
+  {
+    "code": 69,
+    "error": "Go live not allowed",
+    "http_code": 400
+  },
+  {
+    "code": 70,
+    "error": "Transaction not found",
+    "http_code": 404
+  },
+  {
+    "code": 71,
+    "error": "Customer has been deleted",
+    "http_code": 404
+  },
+  {
+    "code": 72,
+    "error": "Currency change not allowed",
+    "http_code": 400
+  },
+  {
+    "code": 73,
+    "error": "Invalid reminder emails days",
+    "http_code": 400
+  },
+  {
+    "code": 74,
+    "error": "Concurrent resource update",
+    "http_code": 400
+  },
+  {
+    "code": 75,
+    "error": "Subscription not eligible for invoice",
+    "http_code": 400
+  },
+  {
+    "code": 76,
+    "error": "Payment method not provided",
+    "http_code": 400
+  },
+  {
+    "code": 77,
+    "error": "Transaction declined",
+    "http_code": 400
+  },
+  {
+    "code": 78,
+    "error": "Transaction processing error",
+    "http_code": 500
+  },
+  {
+    "code": 79,
+    "error": "Invoice already settled",
+    "http_code": 400
+  },
+  {
+    "code": 80,
+    "error": "Invoice has processing transaction",
+    "http_code": 400
+  },
+  {
+    "code": 81,
+    "error": "Online refund not supported, use manual refund",
+    "http_code": 400
+  },
+  {
+    "code": 82,
+    "error": "Invoice wrong state",
+    "http_code": 400
+  },
+  {
+    "code": 83,
+    "error": "Discount not found",
+    "http_code": 404
+  },
+  {
+    "code": 84,
+    "error": "Subscription discount not found",
+    "http_code": 404
+  },
+  {
+    "code": 85,
+    "error": "Multiple discounts not allowed",
+    "http_code": 400
+  },
+  {
+    "code": 86,
+    "error": "Coupon not found or not eligible",
+    "http_code": 404
+  },
+  {
+    "code": 87,
+    "error": "Coupon already used",
+    "http_code": 400
+  },
+  {
+    "code": 88,
+    "error": "Coupon code already exists",
+    "http_code": 400
+  },
+  {
+    "code": 89,
+    "error": "Used coupon cannot be deleted",
+    "http_code": 400
+  },
+  {
+    "code": 90,
+    "error": "Coupon not active",
+    "http_code": 400
+  },
+  {
+    "code": 91,
+    "error": "Coupon cannot be updated",
+    "http_code": 400
+  },
+  {
+    "code": 93,
+    "error": "Cannot expire in current period",
+    "http_code": 400
+  },
+  {
+    "code": 94,
+    "error": "Cannot uncancel in partial period",
+    "http_code": 400
+  },
+  {
+    "code": 95,
+    "error": "Subscription on hold",
+    "http_code": 400
+  },
+  {
+    "code": 96,
+    "error": "Subscription in trial",
+    "http_code": 400
+  },
+  {
+    "code": 97,
+    "error": "Subscription not on hold",
+    "http_code": 400
+  },
+  {
+    "code": 98,
+    "error": "Invalid setup token",
+    "http_code": 400
+  },
+  {
+    "code": 99,
+    "error": "Customer cannot be changed on invoice",
+    "http_code": 400
+  },
+  {
+    "code": 100,
+    "error": "Amount change not allowed on invoice",
+    "http_code": 400
+  },
+  {
+    "code": 101,
+    "error": "Request does not belong to invoice",
+    "http_code": 400
+  },
+  {
+    "code": 102,
+    "error": "Amount higher than authorized amount",
+    "http_code": 400
+  },
+  {
+    "code": 103,
+    "error": "Card token already used",
+    "http_code": 400
+  },
+  {
+    "code": 104,
+    "error": "Card token expired",
+    "http_code": 400
+  },
+  {
+    "code": 105,
+    "error": "Invoice already authorized",
+    "http_code": 400
+  },
+  {
+    "code": 106,
+    "error": "Invoice must be authorized",
+    "http_code": 400
+  },
+  {
+    "code": 107,
+    "error": "Refund not found",
+    "http_code": 404
+  },
+  {
+    "code": 108,
+    "error": "Transaction cancel failed",
+    "http_code": 400
+  },
+  {
+    "code": 109,
+    "error": "Transaction wrong state for operation",
+    "http_code": 400
+  },
+  {
+    "code": 110,
+    "error": "Unknown or missing source",
+    "http_code": 400
+  },
+  {
+    "code": 111,
+    "error": "Source not allowed for signup method",
+    "http_code": 400
+  },
+  {
+    "code": 112,
+    "error": "Invoice wrong type",
+    "http_code": 400
+  },
+  {
+    "code": 113,
+    "error": "Add-on not found",
+    "http_code": 404
+  },
+  {
+    "code": 114,
+    "error": "Add-on already added to subscription",
+    "http_code": 400
+  },
+  {
+    "code": 115,
+    "error": "Add-on quantity not allowed for on-off add-on type",
+    "http_code": 400
+  },
+  {
+    "code": 116,
+    "error": "Add-on not eligible for subscription plan",
+    "http_code": 400
+  },
+  {
+    "code": 117,
+    "error": "Subscription add-on not found",
+    "http_code": 404
+  },
+  {
+    "code": 118,
+    "error": "Subscription pending",
+    "http_code": 400
+  },
+  {
+    "code": 119,
+    "error": "Subscription must be pending",
+    "http_code": 400
+  },
+  {
+    "code": 120,
+    "error": "Credit amount too high",
+    "http_code": 400
+  },
+  {
+    "code": 121,
+    "error": "Discount is deleted",
+    "http_code": 404
+  },
+  {
+    "code": 122,
+    "error": "Request rate limit exceeded",
+    "http_code": 429
+  },
+  {
+    "code": 123,
+    "error": "Concurrent request limit exceeded",
+    "http_code": 429
+  },
+  {
+    "code": 124,
+    "error": "Payment method in use",
+    "http_code": 400
+  },
+  {
+    "code": 125,
+    "error": "Subscription has pending payment method",
+    "http_code": 400
+  },
+  {
+    "code": 127,
+    "error": "Payment method not pending",
+    "http_code": 400
+  },
+  {
+    "code": 128,
+    "error": "Payment method pending",
+    "http_code": 400
+  },
+  {
+    "code": 129,
+    "error": "Multiple settles not allowed for payment method",
+    "http_code": 400
+  },
+  {
+    "code": 130,
+    "error": "Partial settle not allowed for payment method",
+    "http_code": 400
+  },
+  {
+    "code": 131,
+    "error": "Multiple refunds not allowed for payment method",
+    "http_code": 400
+  },
+  {
+    "code": 132,
+    "error": "Partial refund not allowed for payment method",
+    "http_code": 400
+  },
+  {
+    "code": 133,
+    "error": "Payout processing",
+    "http_code": 400
+  },
+  {
+    "code": 134,
+    "error": "Payout already paid",
+    "http_code": 400
+  },
+  {
+    "code": 135,
+    "error": "Payment method not allowed for payout",
+    "http_code": 400
+  },
+  {
+    "code": 136,
+    "error": "Customer cannot be changed on payout",
+    "http_code": 400
+  },
+  {
+    "code": 137,
+    "error": "Payout not found",
+    "http_code": 404
+  },
+  {
+    "code": 138,
+    "error": "No suitable card verification agreement found",
+    "http_code": 400
+  },
+  {
+    "code": 139,
+    "error": "Currency not supported by payment method",
+    "http_code": 400
+  },
+  {
+    "code": 140,
+    "error": "Source type must be reusable",
+    "http_code": 400
+  },
+  {
+    "code": 141,
+    "error": "Too many settle attempts",
+    "http_code": 400
+  },
+  {
+    "code": 142,
+    "error": "Invalid MFA verification code",
+    "http_code": 400
+  },
+  {
+    "code": 143,
+    "error": "MFA authentication required",
+    "http_code": 400
+  },
+  {
+    "code": 144,
+    "error": "Query took too long, adjust time range",
+    "http_code": 400
+  },
+  {
+    "code": 145,
+    "error": "Invoice has zero amount",
+    "http_code": 400
+  },
+  {
+    "code": 146,
+    "error": "Non positive amount",
+    "http_code": 422
+  },
+  {
+    "code": 147,
+    "error": "Payment method failed",
+    "http_code": 400
+  },
+  {
+    "code": 148,
+    "error": "Mfa code expired",
+    "http_code": 408
+  },
+  {
+    "code": 149,
+    "error": "Cannot activate EMV Token Requestor",
+    "http_code": 400
+  },
+  {
+    "code": 150,
+    "error": "Subscription product not found",
+    "http_code": 404
+  },
+  {
+    "code": 151,
+    "error": "Account funding only allowed for instant settle",
+    "http_code": 400
+  },
+  {
+    "code": 152,
+    "error": "VTS token requestor already exists",
+    "http_code": 400
+  },
+  {
+    "code": 153,
+    "error": "Add-on type update from 'quantity' to 'on-off' is not allowed",
+    "http_code": 400
+  },
+  {
+    "code": 154,
+    "error": "Currency mismatch",
+    "http_code": 400
+  },
+  {
+    "code": 155,
+    "error": "EMV Token requestor onboarding failed",
+    "http_code": 400
+  },
+  {
+    "code": 156,
+    "error": "Customer not allowed to perform operation",
+    "http_code": 400
+  },
+  {
+    "code": 157,
+    "error": "Tax policy not found",
+    "http_code": 404
+  },
+  {
+    "code": 158,
+    "error": "Tax policy cannot be deleted",
+    "http_code": 400
+  },
+  {
+    "code": 159,
+    "error": "Invoice accounting number not present on invoice",
+    "http_code": 400
+  },
+  {
+    "code": 160,
+    "error": "Credit note not found",
+    "http_code": 404
+  },
+  {
+    "code": 161,
+    "error": "Customer debtor id already exists on another customer",
+    "http_code": 400
+  },
+  {
+    "code": 162,
+    "error": "Customer debtor id cannot be changed once set",
+    "http_code": 400
+  },
+  {
+    "code": 163,
+    "error": "Supported language not found",
+    "http_code": 404
+  },
+  {
+    "code": 164,
+    "error": "Accounting export not found",
+    "http_code": 404
+  },
+  {
+    "code": 165,
+    "error": "Accounting export storage error",
+    "http_code": 500
+  },
+  {
+    "code": 166,
+    "error": "Accounting export cannot be disabled once enabled",
+    "http_code": 400
+  },
+  {
+    "code": 167,
+    "error": "Accounting export configuration saving is not successful",
+    "http_code": 500
+  },
+  {
+    "code": 168,
+    "error": "Customer missing country",
+    "http_code": 500
+  },
+  {
+    "code": 169,
+    "error": "Entitlement not found",
+    "http_code": 404
+  },
+  {
+    "code": 170,
+    "error": "Entitlement cannot be deleted",
+    "http_code": 400
+  },
+  {
+    "code": 171,
+    "error": "Card bin info not found",
+    "http_code": 404
+  },
+  {
+    "code": 172,
+    "error": "Card invalid pan type",
+    "http_code": 400
+  },
+  {
+    "code": 173,
+    "error": "Accounting export initial retrieve is not done yet",
+    "http_code": 422
+  },
+  {
+    "code": 174,
+    "error": "Accounting invoice not found",
+    "http_code": 404
+  },
+  {
+    "code": 175,
+    "error": "EMV Token update events disabled",
+    "http_code": 400
+  },
+  {
+    "code": 176,
+    "error": "Password expired",
+    "http_code": 400
+  },
+  {
+    "code": 177,
+    "error": "Re-enter password",
+    "http_code": 400
+  },
+  {
+    "code": 178,
+    "error": "Password already used",
+    "http_code": 400
+  },
+  {
+    "code": 179,
+    "error": "Subscription has no next invoice",
+    "http_code": 404
+  },
+  {
+    "code": 180,
+    "error": "Email address not verified",
+    "http_code": 412
+  },
+  {
+    "code": 181,
+    "error": "Refund rejected",
+    "http_code": 400
+  },
+  {
+    "code": 182,
+    "error": "The token has expired. Please request a new account setup e-mail",
+    "http_code": 400
+  }
+]
