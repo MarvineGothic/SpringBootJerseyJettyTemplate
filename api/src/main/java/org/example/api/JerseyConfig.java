@@ -18,8 +18,10 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,13 +36,8 @@ public class JerseyConfig extends ResourceConfig {
     @Context
     private ServletConfig servletConfig;
 
-    public JerseyConfig() {
+    public JerseyConfig(@Value("${api.resource.path}") String apiResourcePath) {
         super();
-        // Swagger
-        register(OpenApiResource.class);
-        register(AcceptHeaderOpenApiResource.class);
-        configureOpenapi(servletConfig);
-
         // https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/appendix-properties.html
         property(ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, true);
         property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
@@ -52,10 +49,15 @@ public class JerseyConfig extends ResourceConfig {
         register(ValidationExceptionMapper.class); // register validation exception mapper
 
         // register resources
-        packages("org.example.api");
+        packages(apiResourcePath);
+
+        // Swagger
+        register(OpenApiResource.class);
+        register(AcceptHeaderOpenApiResource.class);
+        configureOpenapi(servletConfig, apiResourcePath);
     }
 
-    private void configureOpenapi(@Context ServletConfig servletConfig) {
+    private void configureOpenapi(@Context ServletConfig servletConfig, String apiResourcePath) {
         OpenAPI oas = new OpenAPI();
         Info info = new Info()
                 .title("Swagger Sample App bootstrap code")
@@ -70,10 +72,11 @@ public class JerseyConfig extends ResourceConfig {
                         .url("http://www.apache.org/licenses/LICENSE-2.0.html"));
 
         oas.info(info);
+
         SwaggerConfiguration oasConfig = new SwaggerConfiguration()
                 .openAPI(oas)
                 .prettyPrint(true)
-                .resourcePackages(Stream.of("org.example.api").collect(Collectors.toSet()));
+                .resourcePackages(Set.of(apiResourcePath));
 
         try {
             new JaxrsOpenApiContextBuilder<>()
