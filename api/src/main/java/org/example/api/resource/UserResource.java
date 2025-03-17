@@ -1,5 +1,8 @@
-package org.example.api;
+package org.example.api.resource;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
@@ -11,6 +14,11 @@ import org.example.model.request.UserRequestDto;
 import org.example.service.UserService;
 import org.springframework.stereotype.Component;
 
+@Tag(name = "User")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved"),
+        @ApiResponse(responseCode = "404", description = "Not found - The user was not found")
+})
 @Component
 @Path("/v1/user")
 @RequiredArgsConstructor

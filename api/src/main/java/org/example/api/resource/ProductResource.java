@@ -1,4 +1,4 @@
-package org.example.api;
+package org.example.api.resource;
 
 import jakarta.ws.rs.*;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 @Path("/v1/product")
 @RequiredArgsConstructor
-public class ProductController {
+public class ProductResource {
     private final ProductService productService;
 
     @POST

@@ -1,15 +1,13 @@
-package org.example;
+package org.example.api;
 
-import io.swagger.jaxrs.config.BeanConfig;
-import io.swagger.jaxrs.listing.SwaggerSerializers;
 import jakarta.ws.rs.ApplicationPath;
+import org.example.api.resource.UserResource;
 import org.example.model.error.ServiceExceptionMapper;
 import org.example.model.error.ValidationExceptionMapper;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,7 +17,9 @@ import org.springframework.stereotype.Component;
 @Component
 @ApplicationPath("api")
 public class JerseyConfig extends ResourceConfig {
+
     public JerseyConfig() {
+        super();
         // https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest/appendix-properties.html
         property(ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, true);
         property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
@@ -31,6 +31,7 @@ public class JerseyConfig extends ResourceConfig {
         register(JacksonFeature.class);
 
         // register resources
+//        packages("org.example.api");
         register(UserResource.class);
     }
 }
