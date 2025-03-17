@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.database.entity.Address;
 import org.example.database.entity.User;
 import org.example.database.repository.UserRepository;
+import org.example.model.error.ServiceException;
 import org.example.model.request.UserRequestDto;
 import org.example.model.response.UserResponseDto;
 import org.springframework.stereotype.Service;
@@ -28,9 +29,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto createUser(UserRequestDto userRequestDto) throws Exception {
+    public UserResponseDto createUser(UserRequestDto userRequestDto) throws ServiceException {
         if (userRepository.findByEmail(userRequestDto.getEmail()) != null) {
-            throw new Exception("User already exist");
+            throw new ServiceException("User already exist", 400);
         }
         var user = User.builder()
                 .firstName(userRequestDto.getFirstName())

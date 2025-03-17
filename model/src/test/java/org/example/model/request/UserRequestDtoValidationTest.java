@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class UserRequestDtoTest {
+public class UserRequestDtoValidationTest {
     private Validator validator;
 
     @Before

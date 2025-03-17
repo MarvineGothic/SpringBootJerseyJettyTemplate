@@ -17,7 +17,9 @@ import org.springframework.stereotype.Component;
 @Tag(name = "User")
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved"),
-        @ApiResponse(responseCode = "404", description = "Not found - The user was not found")
+        @ApiResponse(responseCode = "404", description = "Not found - The user was not found"),
+        @ApiResponse(responseCode = "400", description = "Validation failed"),
+        @ApiResponse(responseCode = "500", description = "Server error")
 })
 @Component
 @Path("/v1/user")
@@ -58,13 +60,9 @@ public class UserResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createUser(@Valid @NotNull UserRequestDto userRequestDto) {
-        try {
-            return Response
-                    .status(Response.Status.CREATED)
-                    .entity(userService.createUser(userRequestDto)).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+    public Response createUser(@Valid @NotNull UserRequestDto userRequestDto) throws ServiceException {
+        return Response
+                .status(Response.Status.CREATED)
+                .entity(userService.createUser(userRequestDto)).build();
     }
 }
