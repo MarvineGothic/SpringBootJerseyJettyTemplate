@@ -1,5 +1,6 @@
 package org.example.api.resource;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.*;
 import lombok.RequiredArgsConstructor;
 import org.example.database.entity.Product;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Tag(name = "Product")
 @Component
 @Path("/v1/product")
 @RequiredArgsConstructor
