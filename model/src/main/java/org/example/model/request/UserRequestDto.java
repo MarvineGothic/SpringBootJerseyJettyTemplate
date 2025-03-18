@@ -6,8 +6,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.example.model.AbstractRequestDto;
 import org.example.model.authorization.AccessRole;
-import org.example.model.converter.AccessRoleConverter;
+import org.example.model.converter.EnumConverter;
 import org.example.validator.emailvalidator.ValidEmail;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,7 +34,10 @@ public class UserRequestDto extends AbstractRequestDto {
     @Nullable
     @JsonProperty("access_role")
 //    @ValidEnum(enumClass = AccessRole.class)
-//    @JsonDeserialize(using = AccessRoleDeserializer.class)
-    @AccessRoleConverter
+    @EnumConverter
     private AccessRole accessRole;
+
+    @JsonProperty("access_roles")
+    @EnumConverter
+    private List<AccessRole> accessRoles;
 }
