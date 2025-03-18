@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.example.model.AbstractRequestDto;
 import org.example.model.authorization.AccessRole;
+import org.example.model.converter.AccessRoleConverter;
 import org.example.validator.emailvalidator.ValidEmail;
-import org.example.validator.enumvalidator.ValidEnum;
 
 @Getter
 @Setter
@@ -31,7 +31,8 @@ public class UserRequestDto extends AbstractRequestDto {
 
     @Nullable
     @JsonProperty("access_role")
-    @ValidEnum(enumClass = AccessRole.class)
+//    @ValidEnum(enumClass = AccessRole.class)
 //    @JsonDeserialize(using = AccessRoleDeserializer.class)
-    private String accessRole;
+    @AccessRoleConverter
+    private AccessRole accessRole;
 }

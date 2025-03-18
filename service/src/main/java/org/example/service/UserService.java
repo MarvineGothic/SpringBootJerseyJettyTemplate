@@ -39,7 +39,7 @@ public class UserService {
                 .lastName(userRequestDto.getLastName())
                 .email(userRequestDto.getEmail())
                 .password(userRequestDto.getPassword())
-                .accessRole(userRequestDto.getAccessRole() != null ? AccessRole.valueOf(userRequestDto.getAccessRole().toUpperCase()) : null)
+                .accessRole(userRequestDto.getAccessRole())
                 .build();
 
         user = userRepository.save(user);
