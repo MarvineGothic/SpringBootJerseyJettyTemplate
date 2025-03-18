@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.database.entity.Address;
 import org.example.database.entity.User;
 import org.example.database.repository.UserRepository;
+import org.example.model.authorization.AccessRole;
 import org.example.model.error.ServiceException;
 import org.example.model.request.UserRequestDto;
 import org.example.model.response.UserResponseDto;
@@ -38,7 +39,7 @@ public class UserService {
                 .lastName(userRequestDto.getLastName())
                 .email(userRequestDto.getEmail())
                 .password(userRequestDto.getPassword())
-                .role(userRequestDto.getRole())
+                .accessRole(userRequestDto.getAccessRole() != null ? AccessRole.valueOf(userRequestDto.getAccessRole().toUpperCase()) : null)
                 .build();
 
         user = userRepository.save(user);
@@ -55,6 +56,7 @@ public class UserService {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
+                .accessRole(user.getAccessRole())
                 .build();
     }
 }

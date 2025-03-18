@@ -1,12 +1,13 @@
 package org.example.model.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Null;
 import lombok.*;
 import org.example.model.AbstractRequestDto;
-import org.example.model.Role;
+import org.example.model.authorization.AccessRole;
 import org.example.validator.emailvalidator.ValidEmail;
+import org.example.validator.enumvalidator.ValidEnum;
 
 @Getter
 @Setter
@@ -28,6 +29,9 @@ public class UserRequestDto extends AbstractRequestDto {
     @ValidEmail
     private String email;
 
-    @Null
-    private Role role;
+    @Nullable
+    @JsonProperty("access_role")
+    @ValidEnum(enumClass = AccessRole.class)
+//    @JsonDeserialize(using = AccessRoleDeserializer.class)
+    private String accessRole;
 }

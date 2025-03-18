@@ -3,6 +3,7 @@ package org.example.model.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.example.model.AbstractResponseDto;
+import org.example.model.authorization.AccessRole;
 
 @Getter
 @Setter
@@ -17,4 +18,7 @@ public class UserResponseDto extends AbstractResponseDto {
     private String lastName;
 
     private String email;
+
+    @JsonProperty("access_role")
+    private AccessRole accessRole;
 }

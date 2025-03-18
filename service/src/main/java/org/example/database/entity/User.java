@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.model.Role;
+import org.example.model.authorization.AccessRole;
 
 @Entity
 @Table(name = "user")
@@ -31,5 +31,6 @@ public class User {
     private String password;
 
     @Column(name = "role")
-    private Role role;
+    @Enumerated(value = EnumType.STRING)
+    private AccessRole accessRole;
 }
