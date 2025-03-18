@@ -16,6 +16,7 @@ public class ServiceExceptionMapper implements ExceptionMapper<ServiceException>
         var serviceError = new ResponseError();
         serviceError.setCode(e.getStatusCode());
         serviceError.setError(e.getMessage());
+        serviceError.setHttpStatus(String.valueOf(e.getStatusCode()));
         e.printStackTrace(new PrintWriter(new StringWriter()));
         return Response.status(e.getStatusCode())
                 .entity(serviceError)

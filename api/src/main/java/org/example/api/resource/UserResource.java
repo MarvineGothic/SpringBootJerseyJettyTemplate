@@ -9,6 +9,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import org.example.model.authentication.Authenticated;
 import org.example.model.error.ServiceException;
 import org.example.model.request.UserRequestDto;
 import org.example.service.UserService;
@@ -64,5 +65,14 @@ public class UserResource {
         return Response
                 .status(Response.Status.CREATED)
                 .entity(userService.createUser(userRequestDto)).build();
+    }
+
+    @GET
+    @Path("/authenticated")
+    @Authenticated
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAuthenticatedUser() {
+        var users = userService.getUsers();
+        return Response.ok(users).build();
     }
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.database.entity.Address;
 import org.example.database.entity.User;
 import org.example.database.repository.UserRepository;
-import org.example.model.authorization.AccessRole;
 import org.example.model.error.ServiceException;
 import org.example.model.request.UserRequestDto;
 import org.example.model.response.UserResponseDto;
