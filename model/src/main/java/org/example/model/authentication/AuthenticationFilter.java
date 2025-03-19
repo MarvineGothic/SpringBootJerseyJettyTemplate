@@ -1,24 +1,31 @@
 package org.example.model.authentication;
 
 import jakarta.annotation.Priority;
+import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.container.ResourceInfo;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.Provider;
 import org.example.model.error.ResponseError;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Base64;
+import java.util.StringTokenizer;
 
 @Provider // Registers this as a JAX-RS filter
 @Authenticated // Binds this filter to methods annotated with @Authenticated
-@Priority(1000) // Ensures it runs early in the request pipeline
+@Priority(Priorities.AUTHENTICATION) // Ensures it runs early in the request pipeline
 public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Context
     private ResourceInfo resourceInfo; // Provides access to the method being called
+
+    @Context
+    private UriInfo uriInfo;
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
@@ -35,6 +42,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 responseError.setHttpStatus(String.valueOf(Response.Status.UNAUTHORIZED.getStatusCode()));
                 responseError.setHttpReason(Response.Status.UNAUTHORIZED.getReasonPhrase());
                 responseError.setError("Unauthorized: Missing or invalid token");
+                responseError.setPath(uriInfo.getPath());
                 requestContext.abortWith(Response
                         .status(Response.Status.UNAUTHORIZED)
                         .entity(responseError)
@@ -48,6 +56,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                     responseError.setHttpStatus(String.valueOf(Response.Status.UNAUTHORIZED.getStatusCode()));
                     responseError.setHttpReason(Response.Status.UNAUTHORIZED.getReasonPhrase());
                     responseError.setError("Unauthorized: Invalid token");
+                    responseError.setPath(uriInfo.getPath());
                     requestContext.abortWith(Response
                             .status(Response.Status.UNAUTHORIZED)
                             .entity(responseError)
@@ -59,7 +68,16 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     }
 
     private boolean validateToken(String token) {
-        // Dummy token validation - replace with real logic
-        return "valid-token".equals(token);
+        try {
+            var decodedToken = new String(Base64.getDecoder().decode(token));
+            var tokenizer = new StringTokenizer(decodedToken, ":");
+            if (tokenizer.countTokens() != 1) {
+                return false;
+            }
+            var validToken = tokenizer.nextToken();
+            return "valid-token".equals(validToken);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

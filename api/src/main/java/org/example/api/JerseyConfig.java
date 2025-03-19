@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 /**
  * REST Controllers with Jersey JAX-RS
  */
-
 @Component
 @ApplicationPath("/api")
 public class JerseyConfig extends AbstractResourceConfig {
