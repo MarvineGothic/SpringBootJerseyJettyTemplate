@@ -13,6 +13,7 @@ import org.example.model.error.ResponseError;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.StringTokenizer;
 
@@ -38,28 +39,18 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             // Simulated authentication logic
             String authHeader = requestContext.getHeaderString("Authorization");
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                ResponseError responseError = new ResponseError();
-                responseError.setHttpStatus(String.valueOf(Response.Status.UNAUTHORIZED.getStatusCode()));
-                responseError.setHttpReason(Response.Status.UNAUTHORIZED.getReasonPhrase());
-                responseError.setError("Unauthorized: Missing or invalid token");
-                responseError.setPath(uriInfo.getPath());
                 requestContext.abortWith(Response
                         .status(Response.Status.UNAUTHORIZED)
-                        .entity(responseError)
+                        .entity(getUnauthorizedError("Unauthorized: Missing or invalid token"))
                         .build()
                 );
             } else {
                 // Extract token and validate (dummy logic for example)
                 String token = authHeader.substring(7);
                 if (!validateToken(token)) {
-                    ResponseError responseError = new ResponseError();
-                    responseError.setHttpStatus(String.valueOf(Response.Status.UNAUTHORIZED.getStatusCode()));
-                    responseError.setHttpReason(Response.Status.UNAUTHORIZED.getReasonPhrase());
-                    responseError.setError("Unauthorized: Invalid token");
-                    responseError.setPath(uriInfo.getPath());
                     requestContext.abortWith(Response
                             .status(Response.Status.UNAUTHORIZED)
-                            .entity(responseError)
+                            .entity(getUnauthorizedError("Unauthorized: Invalid token"))
                             .build()
                     );
                 }
@@ -79,5 +70,15 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private ResponseError getUnauthorizedError(String error) {
+        ResponseError responseError = new ResponseError();
+        responseError.setHttpStatus(String.valueOf(Response.Status.UNAUTHORIZED.getStatusCode()));
+        responseError.setHttpReason(Response.Status.UNAUTHORIZED.getReasonPhrase());
+        responseError.setError(error);
+        responseError.setPath(uriInfo.getPath());
+        responseError.setTimestamp(LocalDateTime.now().toString());
+        return responseError;
     }
 }

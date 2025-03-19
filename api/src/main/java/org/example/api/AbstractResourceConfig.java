@@ -11,6 +11,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import jakarta.servlet.ServletConfig;
 import jakarta.ws.rs.core.Context;
+import org.example.ServerResponseFilter;
 import org.example.model.authentication.AuthenticationFilter;
 import org.example.model.error.ServiceExceptionMapper;
 import org.example.model.error.ValidationExceptionMapper;
@@ -38,6 +39,8 @@ public abstract class AbstractResourceConfig  extends ResourceConfig {
 
         // Authentication & Authorization
         register(AuthenticationFilter.class);
+
+        register(ServerResponseFilter.class);
 
         register(ServiceExceptionMapper.class); // register custom exception mapper
         register(ValidationExceptionMapper.class); // register validation exception mapper
