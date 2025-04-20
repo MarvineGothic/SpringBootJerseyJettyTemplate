@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.Provider;
-import org.example.model.error.ResponseError;
+import org.example.error.ResponseError;
 
 import java.time.LocalDateTime;
 

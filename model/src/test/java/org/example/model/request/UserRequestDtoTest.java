@@ -10,7 +10,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-public class AbstractRequestDtoTest {
+public class UserRequestDtoTest {
 
     @Test(expected = UnrecognizedPropertyException.class)
     public void unmarshallingUnknownPropertiesThrowsUnrecognizedPropertyException() throws IOException {

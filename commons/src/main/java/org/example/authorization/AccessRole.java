@@ -1,9 +1,9 @@
-package org.example.model.authorization;
+package org.example.authorization;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.example.model.error.ServiceException;
+import org.example.error.ServiceException;
 
 public enum AccessRole {
     ROLE_USER,

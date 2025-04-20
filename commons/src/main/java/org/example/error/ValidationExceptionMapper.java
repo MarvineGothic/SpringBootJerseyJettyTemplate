@@ -1,4 +1,4 @@
-package org.example.model.error;
+package org.example.error;
 
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.MediaType;

@@ -1,9 +1,9 @@
-package org.example.model.converter;
+package org.example.converter;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
-import org.example.model.error.ServiceException;
+import org.example.error.ServiceException;
 
 import java.io.IOException;
 import java.util.stream.Stream;

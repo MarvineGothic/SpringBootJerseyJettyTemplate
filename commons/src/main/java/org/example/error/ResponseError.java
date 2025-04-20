@@ -1,4 +1,4 @@
-package org.example.model.error;
+package org.example.error;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;

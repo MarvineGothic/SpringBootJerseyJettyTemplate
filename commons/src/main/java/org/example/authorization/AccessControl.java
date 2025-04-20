@@ -1,4 +1,4 @@
-package org.example.model.authorization;
+package org.example.authorization;
 
 public class AccessControl {
 

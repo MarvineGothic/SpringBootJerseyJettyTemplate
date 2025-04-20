@@ -3,7 +3,7 @@ package org.example.model.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.example.model.AbstractResponseDto;
-import org.example.model.authorization.AccessRole;
+import org.example.authorization.AccessRole;
 
 @Getter
 @Setter

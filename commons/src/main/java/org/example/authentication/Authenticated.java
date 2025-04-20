@@ -1,4 +1,4 @@
-package org.example.model.authentication;
+package org.example.authentication;
 
 import jakarta.ws.rs.NameBinding;
 

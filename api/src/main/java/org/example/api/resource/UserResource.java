@@ -3,15 +3,17 @@ package org.example.api.resource;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
-import org.example.model.authentication.Authenticated;
-import org.example.model.error.ServiceException;
+import org.example.authentication.Authenticated;
+import org.example.error.ServiceException;
 import org.example.model.request.UserRequestDto;
+import org.example.model.response.UserResponseDto;
 import org.example.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -53,15 +55,15 @@ public class UserResource {
     @GET
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@NotNull @PathParam("userId") Long userId) {
+    public UserResponseDto getUser(@NotNull @PathParam("userId") Long userId) {
         var user = userService.getUser(userId);
-        return user.map(Response::ok).orElse(Response.status(Response.Status.NOT_FOUND)).build();
+        return user.orElseThrow(() -> new ServiceException("User not found", 404));
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createUser(@Valid @NotNull UserRequestDto userRequestDto) throws ServiceException {
+    public Response createUser(@Valid @NotNull UserRequestDto userRequestDto) {
         return Response
                 .status(Response.Status.CREATED)
                 .entity(userService.createUser(userRequestDto)).build();
@@ -70,6 +72,7 @@ public class UserResource {
     @GET
     @Path("/authenticated")
     @Authenticated
+    @RolesAllowed(value = {"ROLE_USER"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAuthenticatedUser() {
         var users = userService.getUsers();

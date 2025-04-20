@@ -1,6 +1,7 @@
 package org.example.api;
 
 import jakarta.ws.rs.ApplicationPath;
+import org.example.AbstractResourceConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

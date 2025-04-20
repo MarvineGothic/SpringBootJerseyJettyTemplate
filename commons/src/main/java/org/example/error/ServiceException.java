@@ -1,4 +1,4 @@
-package org.example.model.error;
+package org.example.error;
 
 import lombok.Getter;
 import lombok.Setter;

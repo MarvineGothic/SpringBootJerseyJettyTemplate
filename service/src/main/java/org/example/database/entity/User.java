@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.model.authorization.AccessRole;
+import org.example.authorization.AccessRole;
 
 @Entity
 @Table(name = "user")

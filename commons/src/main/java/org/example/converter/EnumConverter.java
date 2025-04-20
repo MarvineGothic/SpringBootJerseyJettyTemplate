@@ -1,4 +1,4 @@
-package org.example.model.converter;
+package org.example.converter;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

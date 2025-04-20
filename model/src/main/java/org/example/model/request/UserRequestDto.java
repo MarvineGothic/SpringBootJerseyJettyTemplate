@@ -5,8 +5,8 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.example.model.AbstractRequestDto;
-import org.example.model.authorization.AccessRole;
-import org.example.model.converter.EnumConverter;
+import org.example.authorization.AccessRole;
+import org.example.converter.EnumConverter;
 import org.example.validator.emailvalidator.ValidEmail;
 
 import java.util.List;

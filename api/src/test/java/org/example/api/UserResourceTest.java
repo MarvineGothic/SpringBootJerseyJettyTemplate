@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.example.database.repository.AddressRepository;
 import org.example.database.repository.UserRepository;
-import org.example.model.error.ResponseError;
+import org.example.error.ResponseError;
 import org.example.model.request.UserRequestDto;
 import org.example.model.response.UserResponseDto;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package org.example.model.authentication;
+package org.example.authentication;
 
 import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
@@ -7,11 +7,12 @@ import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.container.ResourceInfo;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.Provider;
-import org.example.model.error.ResponseError;
+import org.example.authorization.AccessRole;
+import org.example.error.ResponseError;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -23,13 +24,17 @@ import java.util.StringTokenizer;
 public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Context
+    private SecurityContext securityContext;
+
+    @Context
     private ResourceInfo resourceInfo; // Provides access to the method being called
 
     @Context
     private UriInfo uriInfo;
 
+
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
+    public void filter(ContainerRequestContext requestContext) {
         Method method = resourceInfo.getResourceMethod();
 
         // Check if the annotation is present on the method or class
@@ -54,6 +59,14 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                             .build()
                     );
                 }
+                // mock user
+                UserPrincipal principal = new UserPrincipal();
+                principal.setUsername("username");
+                var userSecurityContext = new UserSecurityContext();
+                userSecurityContext.setUserRole(AccessRole.ROLE_USER.name());
+                userSecurityContext.setUserPrincipal(principal);
+
+                requestContext.setSecurityContext(userSecurityContext);
             }
         }
     }
