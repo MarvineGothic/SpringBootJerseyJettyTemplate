@@ -14,6 +14,7 @@ import org.example.authentication.Authenticated;
 import org.example.error.ServiceException;
 import org.example.model.request.UserRequestDto;
 import org.example.model.response.UserResponseDto;
+import org.example.service.NotificationService;
 import org.example.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserResource {
     private final UserService userService;
+    private final NotificationService notificationService;
 
     @GET
     @Path("/greeting")
@@ -77,5 +79,12 @@ public class UserResource {
     public Response getAuthenticatedUser() {
         var users = userService.getUsers();
         return Response.ok(users).build();
+    }
+
+    @GET
+    @Path("/notify")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void notification() {
+        notificationService.sendMessage();
     }
 }
