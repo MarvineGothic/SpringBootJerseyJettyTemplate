@@ -1,24 +1,30 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.database.entity.Address;
 import org.example.database.entity.User;
 import org.example.database.repository.UserRepository;
 import org.example.error.ServiceException;
+import org.example.event.EventType;
+import org.example.event.SqsMessagingService;
+import org.example.event.UserCreatedEvent;
 import org.example.model.request.UserRequestDto;
 import org.example.model.response.UserResponseDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+
     private final UserRepository userRepository;
-    private final AddressService addressService;
-    private final NotificationService notificationService;
+    private final SqsMessagingService notificationService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public List<UserResponseDto> getUsers() {
         var users = userRepository.findAll();
@@ -44,12 +50,10 @@ public class UserService {
                 .build();
 
         user = userRepository.save(user);
-        notificationService.sendMessage("UserCreated", user);
-        var address = Address.builder()
-                .address("Copenhagen")
-                .user(user)
-                .build();
-        addressService.addAddress(address);
+        notificationService.sendMessage(EventType.USER_CREATED, user);
+        applicationEventPublisher.publishEvent(new UserCreatedEvent(this, user));
+
+        LOGGER.info("\nUser created");
         return mapUserResponse(user);
     }
 
