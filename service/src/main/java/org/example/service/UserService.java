@@ -18,14 +18,16 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final AddressService addressService;
+    private final NotificationService notificationService;
 
     public List<UserResponseDto> getUsers() {
         var users = userRepository.findAll();
         return users.stream().map(UserService::mapUserResponse).toList();
     }
 
-    public Optional<UserResponseDto> getUser(Long id) {
-        return userRepository.findById(id).map(UserService::mapUserResponse);
+    public UserResponseDto getUser(Long id) {
+        var user = userRepository.findById(id).orElseThrow(() -> new ServiceException("User not found", 404));
+        return UserService.mapUserResponse(user);
     }
 
     @Transactional
@@ -42,6 +44,7 @@ public class UserService {
                 .build();
 
         user = userRepository.save(user);
+        notificationService.sendMessage("UserCreated", user);
         var address = Address.builder()
                 .address("Copenhagen")
                 .user(user)
