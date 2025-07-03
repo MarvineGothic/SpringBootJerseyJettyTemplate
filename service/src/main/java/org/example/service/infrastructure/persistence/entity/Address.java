@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.example.service.domain.entity.AddressEntity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "addresses")
@@ -38,7 +38,7 @@ public class Address {
     private String country;
 
     @ManyToMany(mappedBy = "addresses")
-    private Set<User> users = new HashSet<>();
+    private List<User> users = new ArrayList<>();
 
     public static Address fromDomain(AddressEntity addressEntity) {
         return Address.builder()

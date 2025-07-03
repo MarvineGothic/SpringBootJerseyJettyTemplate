@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
                 .password(userRequestModel.getPassword())
                 .accessRole(userRequestModel.getAccessRole())
                 .creationTime(LocalDateTime.now())
-                .addresses(Set.of(Address.builder()
+                .addresses(List.of(Address.builder()
                                 .street("Valdemarsgade")
                                 .house("34")
                                 .country("Denmark")

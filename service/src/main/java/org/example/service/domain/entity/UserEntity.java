@@ -1,11 +1,14 @@
 package org.example.service.domain.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.example.authorization.AccessRole;
 import org.example.service.infrastructure.persistence.entity.Address;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,5 +30,5 @@ public class UserEntity {
 
     private LocalDateTime creationTime;
 
-    private Set<Address> addresses;
+    private List<Address> addresses;
 }

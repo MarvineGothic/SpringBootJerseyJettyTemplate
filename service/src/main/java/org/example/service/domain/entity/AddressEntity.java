@@ -3,7 +3,7 @@ package org.example.service.domain.entity;
 import lombok.*;
 import org.example.service.infrastructure.persistence.entity.User;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,5 +25,5 @@ public class AddressEntity {
 
     private String country;
 
-    private Set<User> users;
+    private List<User> users;
 }
