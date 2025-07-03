@@ -4,26 +4,27 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.assertj.core.groups.Tuple;
-import org.junit.Before;
-import org.junit.Test;
+import org.example.model.ModelTestConfiguration;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest
-public class UserRequestDtoValidationTest {
+@SpringBootTest(classes = ModelTestConfiguration.class)
+class UserRequestModelValidationTest {
     private Validator validator;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
     @Test
-    public void noViolations() {
-        var userRequest = UserRequestDto.builder()
+    void noViolations() {
+        var userRequest = UserRequestModel.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .email("jd@gmail.com")
@@ -34,8 +35,8 @@ public class UserRequestDtoValidationTest {
     }
 
     @Test
-    public void allViolations() {
-        var userRequest = UserRequestDto.builder()
+    void allViolations() {
+        var userRequest = UserRequestModel.builder()
                 .firstName("")
                 .lastName(null)
                 .email("jd@gmail.")

@@ -1,4 +1,4 @@
-package org.example;
+package org.example.service;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;

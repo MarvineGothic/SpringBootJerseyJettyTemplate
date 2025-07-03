@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequestDto extends AbstractRequestDto {
+public class UserRequestModel implements AbstractRequestDto {
     @NotBlank
     @JsonProperty("firstname")
     private String firstName;
@@ -26,9 +26,11 @@ public class UserRequestDto extends AbstractRequestDto {
     private String lastName;
 
     @NotBlank
+    @JsonProperty("password")
     private String password;
 
     @ValidEmail
+    @JsonProperty("email")
     private String email;
 
     @Nullable

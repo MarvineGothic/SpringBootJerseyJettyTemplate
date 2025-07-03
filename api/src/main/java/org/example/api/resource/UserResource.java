@@ -12,32 +12,28 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.example.authentication.Authenticated;
 import org.example.error.ServiceException;
-import org.example.model.request.UserRequestDto;
-import org.example.model.response.UserResponseDto;
-import org.example.service.UserService;
-import org.springframework.stereotype.Component;
+import org.example.model.request.UserRequestModel;
+import org.example.model.response.AddressResponseModel;
+import org.example.model.response.UserResponseModel;
+import org.example.service.application.user.UserService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Set;
 
-@Tag(name = "User")
+@Tag(name = "Users")
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved"),
         @ApiResponse(responseCode = "404", description = "Not found - The user was not found"),
         @ApiResponse(responseCode = "400", description = "Validation failed"),
         @ApiResponse(responseCode = "500", description = "Server error")
 })
-@Component
-@Path("/v1/user")
+@Controller
+@Path("/v1/users")
 @RequiredArgsConstructor
 public class UserResource {
     private final UserService userService;
-
-    @GET
-    @Path("/greeting")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response getGreeting() {
-        return Response.ok("Hello, world").build();
-    }
 
     @GET
     @Path("/exception")
@@ -49,22 +45,29 @@ public class UserResource {
     @GET
     @Path("/list")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<UserResponseDto> getUsers() {
+    public List<UserResponseModel> getUsers() {
         return userService.getUsers();
     }
 
     @GET
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public UserResponseDto getUser(@NotNull @PathParam("userId") Long userId) {
+    public UserResponseModel getUser(@NotNull @PathParam("userId") Long userId) {
         return userService.getUser(userId);
+    }
+
+    @GET
+    @Path("/{userId}/addresses")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<AddressResponseModel> getUserAddresses(@NotNull @PathParam("userId") Long userId) {
+        return userService.getUserAddresses(userId);
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public UserResponseDto createUser(@Valid @NotNull UserRequestDto userRequestDto) {
-        return userService.createUser(userRequestDto);
+    public UserResponseModel createUser(@RequestBody @Valid @NotNull UserRequestModel userRequestModel) {
+        return userService.createUser(userRequestModel);
     }
 
     @GET

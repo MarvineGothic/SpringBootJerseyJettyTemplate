@@ -1,7 +1,7 @@
-package org.example.eventHandler;
+package org.example.service.application.eventHandler;
 
 import lombok.RequiredArgsConstructor;
-import org.example.event.UserCreatedEvent;
+import org.example.service.domain.event.UserCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -15,7 +15,7 @@ public class NotificationServiceHandler {
 
     @EventListener
     @Async
-    public void handle(UserCreatedEvent userCreatedEvent)  throws InterruptedException {
-        LOGGER.info("\nNotificationService: Sending user notification  {}", Thread.currentThread().getName());
+    public void handle(UserCreatedEvent userCreatedEvent) {
+        LOGGER.info("\nNotificationService: Sending user notification {}, thread {}", userCreatedEvent.event(), Thread.currentThread().getName());
     }
 }

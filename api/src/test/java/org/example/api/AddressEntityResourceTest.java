@@ -7,11 +7,11 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.example.database.repository.AddressRepository;
-import org.example.database.repository.UserRepository;
+import org.example.service.infrastructure.persistence.repository.AddressJpaRepository;
+import org.example.service.infrastructure.persistence.repository.UserJpaRepository;
 import org.example.error.ResponseError;
-import org.example.model.request.UserRequestDto;
-import org.example.model.response.UserResponseDto;
+import org.example.model.request.UserRequestModel;
+import org.example.model.response.UserResponseModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,19 +28,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserResourceTest {
+public class AddressEntityResourceTest {
 
     @LocalServerPort
     private int port;
 
-    private static final String BASE_URL = "api/v1/user";
+    private static final String BASE_URL = "api/v1/users";
     private URI uri;
     private Client client;
 
     @Inject
-    private UserRepository userRepository;
+    private UserJpaRepository userJpaRepository;
     @Inject
-    private AddressRepository addressRepository;
+    private AddressJpaRepository addressJpaRepository;
 
     @Before
     public void setUp() throws URISyntaxException {
@@ -81,41 +81,41 @@ public class UserResourceTest {
         Response response = client.target(uri).path(BASE_URL).path("/list")
                 .request(MediaType.APPLICATION_JSON).get();
         assertEquals(200, response.getStatus());
-        var list = response.readEntity(new GenericType<List<UserResponseDto>>(){});
+        var list = response.readEntity(new GenericType<List<UserResponseModel>>(){});
         assertTrue(list.isEmpty());
     }
 
     @Test
     public void createUserMissingPassword() {
-        UserRequestDto userRequestDto = UserRequestDto.builder()
+        UserRequestModel userRequestModel = UserRequestModel.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .email("johndoe@gmail.com")
                 .build();
 
         try (Response response = client.target(uri).path(BASE_URL)
-                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestDto))) {
+                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestModel))) {
             assertEquals(400, response.getStatus());
         }
     }
 
     @Test
     public void createUserInvalidEmail() {
-        UserRequestDto userRequestDto = UserRequestDto.builder()
+        UserRequestModel userRequestModel = UserRequestModel.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .email("johndoe@gmail")
                 .build();
 
         try (Response response = client.target(uri).path(BASE_URL)
-                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestDto))) {
+                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestModel))) {
             assertEquals(400, response.getStatus());
         }
     }
 
     @Test
     public void createUserSuccess() {
-        UserRequestDto userRequestDto = UserRequestDto.builder()
+        UserRequestModel userRequestModel = UserRequestModel.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .email("johndoe@gmail.com")
@@ -123,18 +123,18 @@ public class UserResourceTest {
                 .build();
 
         try (Response response = client.target(uri).path(BASE_URL)
-                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestDto))) {
+                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestModel))) {
             assertEquals(201, response.getStatus());
-            var user = response.readEntity(UserResponseDto.class);
+            var user = response.readEntity(UserResponseModel.class);
             assertEquals("John", user.getFirstName());
         }
-        addressRepository.deleteAll();
-        userRepository.deleteAll();
+        addressJpaRepository.deleteAll();
+        userJpaRepository.deleteAll();
     }
 
     @Test
     public void createUserExists() {
-        UserRequestDto userRequestDto = UserRequestDto.builder()
+        UserRequestModel userRequestModel = UserRequestModel.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .email("johndoe@gmail.com")
@@ -142,16 +142,16 @@ public class UserResourceTest {
                 .build();
 
         try (Response response = client.target(uri).path(BASE_URL)
-                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestDto))) {
+                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestModel))) {
             assertEquals(201, response.getStatus());
-            var user = response.readEntity(UserResponseDto.class);
+            var user = response.readEntity(UserResponseModel.class);
             assertEquals("John", user.getFirstName());
         }
         try (Response response = client.target(uri).path(BASE_URL)
-                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestDto))) {
+                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestModel))) {
             assertEquals(400, response.getStatus());
         }
-        addressRepository.deleteAll();
-        userRepository.deleteAll();
+        addressJpaRepository.deleteAll();
+        userJpaRepository.deleteAll();
     }
 }

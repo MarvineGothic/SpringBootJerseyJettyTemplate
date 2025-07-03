@@ -1,16 +1,20 @@
-package org.example.database.repository;
+package org.example.service.infrastructure.persistence.repository;
 
-import org.example.database.entity.User;
+import org.example.service.infrastructure.persistence.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByEmail(String email);
+public interface UserJpaRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByEmail(String email);
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.addresses WHERE u.id = :id")
+    Optional<User> findByIdWithAddresses(@Param("id") Long id);
 
     //    @Query("select u from user u where u.firstName = :firstName and u.lastName = :lastName")
 //    List<User> findByLastNameAndFirstName(@Param("lastName") String lastName,
