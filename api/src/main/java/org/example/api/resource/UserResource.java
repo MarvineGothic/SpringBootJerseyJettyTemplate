@@ -15,7 +15,7 @@ import org.example.error.ServiceException;
 import org.example.model.request.UserRequestModel;
 import org.example.model.response.AddressResponseModel;
 import org.example.model.response.UserResponseModel;
-import org.example.service.application.user.UserService;
+import org.example.application.service.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 

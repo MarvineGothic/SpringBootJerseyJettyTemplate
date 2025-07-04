@@ -17,9 +17,11 @@
     <packaging>pom</packaging>
     <modules>
         <module>api</module>
-        <module>service</module>
+        <module>application</module>
         <module>model</module>
         <module>commons</module>
+        <module>infrastructure</module>
+        <module>domain</module>
     </modules>
 
     <properties>
