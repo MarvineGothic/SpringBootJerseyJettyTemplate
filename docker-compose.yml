@@ -11,6 +11,16 @@ services:
       MYSQL_DATABASE: example
       MYSQL_ROOT_PASSWORD: password
 
+  postgresql:
+    image: postgres
+    shm_size: 128mb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: example
+
   localstack:
     container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
     image: localstack/localstack
