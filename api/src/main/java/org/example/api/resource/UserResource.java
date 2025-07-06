@@ -13,9 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.example.authentication.Authenticated;
 import org.example.error.ServiceException;
 import org.example.model.request.CreateUserRequestModel;
+import org.example.model.request.UserLoginRequestModel;
 import org.example.model.response.AddressResponseModel;
 import org.example.model.response.UserResponseModel;
 import org.example.application.service.user.UserService;
+import org.example.model.response.UserSessionResponseModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -61,6 +63,13 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Set<AddressResponseModel> getUserAddresses(@NotNull @PathParam("userId") Long userId) {
         return userService.getUserAddresses(userId);
+    }
+
+    @POST
+    @Path("/login")
+    @Produces(MediaType.APPLICATION_JSON)
+    public UserSessionResponseModel userLogin(@RequestBody @Valid @NotNull UserLoginRequestModel userLoginRequestModel) {
+        return userService.login(userLoginRequestModel);
     }
 
     @POST

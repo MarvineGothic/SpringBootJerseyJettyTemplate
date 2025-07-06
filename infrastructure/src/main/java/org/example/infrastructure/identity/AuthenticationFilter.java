@@ -1,6 +1,7 @@
-package org.example.authentication;
+package org.example.infrastructure.identity;
 
 import jakarta.annotation.Priority;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
@@ -10,18 +11,21 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.Provider;
-import org.example.authorization.AccessRole;
+import org.apache.commons.lang3.NotImplementedException;
+import org.example.authentication.Authenticated;
+import org.example.authentication.BasicAuthenticationService;
 import org.example.error.ResponseError;
 
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.StringTokenizer;
 
 @Provider // Registers this as a JAX-RS filter
 @Authenticated // Binds this filter to methods annotated with @Authenticated
 @Priority(Priorities.AUTHENTICATION) // Ensures it runs early in the request pipeline
 public class AuthenticationFilter implements ContainerRequestFilter {
+
+    @Inject
+    private BasicAuthenticationService basicAuthenticationService;
 
     @Context
     private SecurityContext securityContext;
@@ -31,7 +35,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Context
     private UriInfo uriInfo;
-
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
@@ -43,53 +46,41 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
             // Simulated authentication logic
             String authHeader = requestContext.getHeaderString("Authorization");
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            if (authHeader == null) {
                 requestContext.abortWith(Response
                         .status(Response.Status.UNAUTHORIZED)
-                        .entity(getUnauthorizedError("Unauthorized: Missing or invalid token"))
+                        .entity(getUnauthorizedError())
                         .build()
                 );
-            } else {
-                // Extract token and validate (dummy logic for example)
-                String token = authHeader.substring(7);
-                if (!validateToken(token)) {
+            } else if (authHeader.startsWith("Basic ")) { // Basic is deprecating. Use JWT or OAUTH
+                String token = authHeader.substring(6);
+                var userSecurityContext = basicAuthenticationService.validateBasicAuthenticationToken(token);
+                if (userSecurityContext == null) {
                     requestContext.abortWith(Response
                             .status(Response.Status.UNAUTHORIZED)
-                            .entity(getUnauthorizedError("Unauthorized: Invalid token"))
+                            .entity(getUnauthorizedError())
                             .build()
                     );
                 }
-                // mock user
-                UserPrincipal principal = new UserPrincipal();
-                principal.setUsername("username");
-                var userSecurityContext = new UserSecurityContext();
-                userSecurityContext.setUserRole(AccessRole.ROLE_USER.name());
-                userSecurityContext.setUserPrincipal(principal);
 
                 requestContext.setSecurityContext(userSecurityContext);
+            } else if (authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                throw new NotImplementedException();
+            } else {
+                requestContext.abortWith(Response
+                        .status(Response.Status.UNAUTHORIZED)
+                        .entity(getUnauthorizedError())
+                        .build());
             }
         }
     }
 
-    private boolean validateToken(String token) {
-        try {
-            var decodedToken = new String(Base64.getDecoder().decode(token));
-            var tokenizer = new StringTokenizer(decodedToken, ":");
-            if (tokenizer.countTokens() != 1) {
-                return false;
-            }
-            var validToken = tokenizer.nextToken();
-            return "valid-token".equals(validToken);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private ResponseError getUnauthorizedError(String error) {
+    private ResponseError getUnauthorizedError() {
         ResponseError responseError = new ResponseError();
         responseError.setHttpStatus(String.valueOf(Response.Status.UNAUTHORIZED.getStatusCode()));
         responseError.setHttpReason(Response.Status.UNAUTHORIZED.getReasonPhrase());
-        responseError.setError(error);
+        responseError.setError("Unauthorized: Missing or invalid token");
         responseError.setPath(uriInfo.getPath());
         responseError.setTimestamp(LocalDateTime.now().toString());
         return responseError;

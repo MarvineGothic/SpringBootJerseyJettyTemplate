@@ -2,6 +2,7 @@ package org.example.application.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.example.application.service.address.UserAddressService;
+import org.example.authentication.BasicAuthenticationService;
 import org.example.domain.entity.User;
 import org.example.domain.event.EventPublisher;
 import org.example.domain.event.MessageSender;
@@ -10,8 +11,10 @@ import org.example.domain.repository.UserRepository;
 import org.example.error.ServiceException;
 import org.example.event.EventType;
 import org.example.model.request.CreateUserRequestModel;
+import org.example.model.request.UserLoginRequestModel;
 import org.example.model.response.AddressResponseModel;
 import org.example.model.response.UserResponseModel;
+import org.example.model.response.UserSessionResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,10 +32,24 @@ import java.util.Set;
 public class UserServiceImpl implements UserService { // Use Case Interactor
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    private final BasicAuthenticationService basicAuthenticationService;
     private final UserRepository userRepository;
     private final UserAddressService userAddressService;
     private final MessageSender notificationService;
     private final EventPublisher eventPublisher;
+
+    @Override
+    public UserSessionResponseModel login(UserLoginRequestModel userLoginRequestModel) {
+        var user = userRepository.getUserByEmail(userLoginRequestModel.getEmail())
+                .orElseThrow(() -> new ServiceException("Bad credentials", HttpStatus.BAD_REQUEST.value()));
+        if (!user.getPassword().equals(userLoginRequestModel.getPassword())) { // use password encryption/decryption
+            throw new ServiceException("Bad credentials", HttpStatus.BAD_REQUEST.value());
+        }
+
+        return UserSessionResponseModel.builder()
+                .sessionToken(basicAuthenticationService.getBasicAuthenticationToken(user.getEmail(), user.getPassword()))
+                .build();
+    }
 
     @Override
     @Transactional

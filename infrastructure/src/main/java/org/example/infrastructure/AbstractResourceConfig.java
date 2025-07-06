@@ -1,4 +1,4 @@
-package org.example;
+package org.example.infrastructure;
 
 import io.swagger.v3.jaxrs2.integration.JaxrsOpenApiContextBuilder;
 import io.swagger.v3.jaxrs2.integration.resources.AcceptHeaderOpenApiResource;
@@ -11,13 +11,12 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import jakarta.servlet.ServletConfig;
 import jakarta.ws.rs.core.Context;
-import org.example.authentication.AuthenticationFilter;
+import org.example.ServerResponseFilter;
 import org.example.error.ServiceExceptionMapper;
 import org.example.error.ValidationExceptionMapper;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
-import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -36,10 +35,6 @@ public abstract class AbstractResourceConfig  extends ResourceConfig {
 
         register(RequestContextFilter.class);
         register(JacksonFeature.class);
-
-        // Authentication & Authorization
-        register(AuthenticationFilter.class);
-        register(RolesAllowedDynamicFeature.class);
 
         register(ServerResponseFilter.class);
 
