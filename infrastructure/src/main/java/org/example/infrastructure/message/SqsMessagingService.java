@@ -21,7 +21,6 @@ import static io.awspring.cloud.sqs.listener.SqsHeaders.MessageSystemAttributes.
 @Service
 @RequiredArgsConstructor
 public class SqsMessagingService implements MessageSender {
-    public static final String EVENT_TYPE_CUSTOM_HEADER = "eventType";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SqsMessagingService.class);
     @Value("${events.queue.myQueue}")
@@ -36,6 +35,7 @@ public class SqsMessagingService implements MessageSender {
         LOGGER.info("\nReceived message {} with event type {}. First received at approximately {}.", message.getPayload(), eventType, firstReceive);
     }
 
+    @Override
     public void sendMessage(EventType eventType, Object o) {
         LOGGER.info("\nSending event");
         SqsMessage event = new SqsMessage(UlidCreator.getUlid().toString(), eventType, o);

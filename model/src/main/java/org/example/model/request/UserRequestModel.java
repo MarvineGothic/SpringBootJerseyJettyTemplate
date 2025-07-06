@@ -42,4 +42,7 @@ public class UserRequestModel implements AbstractRequestDto {
     @JsonProperty("access_roles")
     @EnumConverter
     private List<AccessRole> accessRoles;
+
+    @JsonProperty("addresses")
+    private List<AddressRequestModel> addresses;
 }

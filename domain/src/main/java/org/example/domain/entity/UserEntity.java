@@ -4,6 +4,7 @@ import lombok.*;
 import org.example.authorization.AccessRole;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,4 +25,6 @@ public class UserEntity {
     private AccessRole accessRole;
 
     private LocalDateTime creationTime;
+
+    private List<AddressEntity> addresses;
 }

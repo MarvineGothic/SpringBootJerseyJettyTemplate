@@ -1,14 +1,14 @@
 package org.example.application.service.user;
 
 import lombok.RequiredArgsConstructor;
-import org.example.domain.entity.AddressEntity;
+import org.example.application.service.address.UserAddressService;
 import org.example.domain.entity.UserEntity;
 import org.example.domain.event.EventPublisher;
+import org.example.domain.event.MessageSender;
 import org.example.domain.event.UserCreatedEvent;
 import org.example.domain.repository.UserRepository;
 import org.example.error.ServiceException;
 import org.example.event.EventType;
-import org.example.infrastructure.message.SqsMessagingService;
 import org.example.model.request.UserRequestModel;
 import org.example.model.response.AddressResponseModel;
 import org.example.model.response.UserResponseModel;
@@ -30,7 +30,8 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
-    private final SqsMessagingService notificationService;
+    private final UserAddressService userAddressService;
+    private final MessageSender notificationService;
     private final EventPublisher eventPublisher;
 
     @Override
@@ -61,13 +62,11 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
                 .password(userRequestModel.getPassword())
                 .accessRole(userRequestModel.getAccessRole())
                 .creationTime(LocalDateTime.now())
-//                .addresses(List.of(Address.builder()
-//                                .street("Valdemarsgade")
-//                                .house("34")
-//                                .country("Denmark")
-//                        .build()))
                 .build();
         user = userRepository.createUser(user);
+        for (var addressRequest : userRequestModel.getAddresses()) {
+            userAddressService.addAddress(user.getId(), addressRequest);
+        }
 
         notificationService.sendMessage(EventType.USER_CREATED, user);
         eventPublisher.publish(new UserCreatedEvent(this, user));
@@ -94,17 +93,6 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
                 .accessRole(user.getAccessRole())
                 .createdDate(user.getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
 //                .addresses(addressesResponse.isEmpty() ? null : addressesResponse)
-                .build();
-    }
-
-    public static AddressResponseModel mapAddressResponse(AddressEntity address) {
-        return AddressResponseModel.builder()
-                .house(address.getHouse())
-                .floor(address.getFloor())
-                .street(address.getStreet())
-                .postCode(address.getPostCode())
-                .city(address.getCity())
-                .country(address.getCountry())
                 .build();
     }
 }

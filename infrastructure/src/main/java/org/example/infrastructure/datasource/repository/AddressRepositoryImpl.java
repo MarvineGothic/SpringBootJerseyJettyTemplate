@@ -3,9 +3,12 @@ package org.example.infrastructure.datasource.repository;
 import lombok.RequiredArgsConstructor;
 import org.example.domain.entity.AddressEntity;
 import org.example.domain.repository.AddressRepository;
+import org.example.error.ServiceException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -13,10 +16,16 @@ import java.util.Optional;
 @Service
 public class AddressRepositoryImpl implements AddressRepository {
     private final AddressJpaRepository addressJpaRepository;
+    private final UserJpaRepository userJpaRepository;
 
     @Override
-    public AddressEntity save(AddressEntity address) {
-        return AddressRepositoryMapper.toDomain(addressJpaRepository.save(AddressRepositoryMapper.fromDomain(address)));
+    public AddressEntity save(long userId, AddressEntity address) {
+        var user = userJpaRepository.findById(userId)
+                .orElseThrow(() -> new ServiceException("User not found", HttpStatus.NOT_FOUND.value()));
+        var addresses = new ArrayList<>(user.getAddresses());
+        addresses.add(AddressRepositoryMapper.fromDomain(address));
+        user.setAddresses(addresses);
+        return address;
     }
 
     @Override
