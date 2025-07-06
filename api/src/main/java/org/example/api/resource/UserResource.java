@@ -12,7 +12,7 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.example.authentication.Authenticated;
 import org.example.error.ServiceException;
-import org.example.model.request.UserRequestModel;
+import org.example.model.request.CreateUserRequestModel;
 import org.example.model.response.AddressResponseModel;
 import org.example.model.response.UserResponseModel;
 import org.example.application.service.user.UserService;
@@ -66,8 +66,8 @@ public class UserResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public UserResponseModel createUser(@RequestBody @Valid @NotNull UserRequestModel userRequestModel) {
-        return userService.createUser(userRequestModel);
+    public UserResponseModel createUser(@RequestBody @Valid @NotNull CreateUserRequestModel createUserRequestModel) {
+        return userService.createUser(createUserRequestModel);
     }
 
     @GET

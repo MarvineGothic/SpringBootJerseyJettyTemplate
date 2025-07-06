@@ -10,7 +10,7 @@ import jakarta.ws.rs.core.Response;
 import org.example.error.ResponseError;
 import org.example.infrastructure.datasource.repository.AddressJpaRepository;
 import org.example.infrastructure.datasource.repository.UserJpaRepository;
-import org.example.model.request.UserRequestModel;
+import org.example.model.request.CreateUserRequestModel;
 import org.example.model.response.UserResponseModel;
 import org.junit.Before;
 import org.junit.Test;
@@ -87,35 +87,35 @@ public class UserResourceTest {
 
     @Test
     public void createUserMissingPassword() {
-        UserRequestModel userRequestModel = UserRequestModel.builder()
+        CreateUserRequestModel createUserRequestModel = CreateUserRequestModel.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .email("johndoe@gmail.com")
                 .build();
 
         try (Response response = client.target(uri).path(BASE_URL)
-                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestModel))) {
+                .request(MediaType.APPLICATION_JSON).post(Entity.json(createUserRequestModel))) {
             assertEquals(400, response.getStatus());
         }
     }
 
     @Test
     public void createUserInvalidEmail() {
-        UserRequestModel userRequestModel = UserRequestModel.builder()
+        CreateUserRequestModel createUserRequestModel = CreateUserRequestModel.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .email("johndoe@gmail")
                 .build();
 
         try (Response response = client.target(uri).path(BASE_URL)
-                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestModel))) {
+                .request(MediaType.APPLICATION_JSON).post(Entity.json(createUserRequestModel))) {
             assertEquals(400, response.getStatus());
         }
     }
 
     @Test
     public void createUserSuccess() {
-        UserRequestModel userRequestModel = UserRequestModel.builder()
+        CreateUserRequestModel createUserRequestModel = CreateUserRequestModel.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .email("johndoe@gmail.com")
@@ -123,7 +123,7 @@ public class UserResourceTest {
                 .build();
 
         try (Response response = client.target(uri).path(BASE_URL)
-                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestModel))) {
+                .request(MediaType.APPLICATION_JSON).post(Entity.json(createUserRequestModel))) {
             assertEquals(201, response.getStatus());
             var user = response.readEntity(UserResponseModel.class);
             assertEquals("John", user.getFirstName());
@@ -134,7 +134,7 @@ public class UserResourceTest {
 
     @Test
     public void createUserExists() {
-        UserRequestModel userRequestModel = UserRequestModel.builder()
+        CreateUserRequestModel createUserRequestModel = CreateUserRequestModel.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .email("johndoe@gmail.com")
@@ -142,13 +142,13 @@ public class UserResourceTest {
                 .build();
 
         try (Response response = client.target(uri).path(BASE_URL)
-                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestModel))) {
+                .request(MediaType.APPLICATION_JSON).post(Entity.json(createUserRequestModel))) {
             assertEquals(201, response.getStatus());
             var user = response.readEntity(UserResponseModel.class);
             assertEquals("John", user.getFirstName());
         }
         try (Response response = client.target(uri).path(BASE_URL)
-                .request(MediaType.APPLICATION_JSON).post(Entity.json(userRequestModel))) {
+                .request(MediaType.APPLICATION_JSON).post(Entity.json(createUserRequestModel))) {
             assertEquals(400, response.getStatus());
         }
         addressJpaRepository.deleteAll();

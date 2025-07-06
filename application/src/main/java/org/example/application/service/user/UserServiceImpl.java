@@ -9,7 +9,7 @@ import org.example.domain.event.UserCreatedEvent;
 import org.example.domain.repository.UserRepository;
 import org.example.error.ServiceException;
 import org.example.event.EventType;
-import org.example.model.request.UserRequestModel;
+import org.example.model.request.CreateUserRequestModel;
 import org.example.model.response.AddressResponseModel;
 import org.example.model.response.UserResponseModel;
 import org.slf4j.Logger;
@@ -51,20 +51,20 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
 
     @Override
     @Transactional
-    public UserResponseModel createUser(UserRequestModel userRequestModel) throws ServiceException {
-        userRepository.getUserByEmail(userRequestModel.getEmail())
+    public UserResponseModel createUser(CreateUserRequestModel createUserRequestModel) throws ServiceException {
+        userRepository.getUserByEmail(createUserRequestModel.getEmail())
                 .ifPresent(user -> { throw new ServiceException("User already exist", HttpStatus.BAD_REQUEST.value()); });
 
         var user = User.builder()
-                .firstName(userRequestModel.getFirstName())
-                .lastName(userRequestModel.getLastName())
-                .email(userRequestModel.getEmail())
-                .password(userRequestModel.getPassword())
-                .accessRole(userRequestModel.getAccessRole())
+                .firstName(createUserRequestModel.getFirstName())
+                .lastName(createUserRequestModel.getLastName())
+                .email(createUserRequestModel.getEmail())
+                .password(createUserRequestModel.getPassword())
+                .accessRole(createUserRequestModel.getAccessRole())
                 .creationTime(LocalDateTime.now())
                 .build();
         user = userRepository.createUser(user);
-        for (var addressRequest : userRequestModel.getAddresses()) {
+        for (var addressRequest : createUserRequestModel.getAddresses()) {
             userAddressService.addAddress(user.getId(), addressRequest);
         }
 

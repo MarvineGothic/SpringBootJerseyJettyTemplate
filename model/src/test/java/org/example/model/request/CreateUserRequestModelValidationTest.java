@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = ModelTestConfiguration.class)
-class UserRequestModelValidationTest {
+class CreateUserRequestModelValidationTest {
     private Validator validator;
 
     @BeforeEach
@@ -24,7 +24,7 @@ class UserRequestModelValidationTest {
 
     @Test
     void noViolations() {
-        var userRequest = UserRequestModel.builder()
+        var userRequest = CreateUserRequestModel.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .email("jd@gmail.com")
@@ -36,7 +36,7 @@ class UserRequestModelValidationTest {
 
     @Test
     void allViolations() {
-        var userRequest = UserRequestModel.builder()
+        var userRequest = CreateUserRequestModel.builder()
                 .firstName("")
                 .lastName(null)
                 .email("jd@gmail.")

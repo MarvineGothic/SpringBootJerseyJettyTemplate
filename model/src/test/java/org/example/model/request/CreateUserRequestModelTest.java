@@ -10,7 +10,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-public class UserRequestModelTest {
+public class CreateUserRequestModelTest {
 
     @Test(expected = UnrecognizedPropertyException.class)
     public void unmarshallingUnknownPropertiesThrowsUnrecognizedPropertyException() throws IOException {
@@ -35,7 +35,7 @@ public class UserRequestModelTest {
                         "\"unrecognizedStringValue\":\"something\"}";
         ObjectMapper mapper = new ObjectMapper();
 
-        UserRequestModel readValue = mapper.readValue(jsonAsString, UserRequestModel.class);
+        CreateUserRequestModel readValue = mapper.readValue(jsonAsString, CreateUserRequestModel.class);
 
         assertNotNull(readValue);
     }

@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequestModel implements AbstractRequestDto {
+public class CreateUserRequestModel implements AbstractRequestDto {
     @NotBlank
     @JsonProperty("firstname")
     private String firstName;
