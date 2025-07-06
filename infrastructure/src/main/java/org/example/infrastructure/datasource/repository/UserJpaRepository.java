@@ -1,6 +1,6 @@
-package org.example.infrastructure.persistence.repository;
+package org.example.infrastructure.datasource.repository;
 
-import org.example.infrastructure.persistence.entity.User;
+import org.example.infrastructure.datasource.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

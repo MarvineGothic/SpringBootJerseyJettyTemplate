@@ -8,6 +8,7 @@ import org.example.model.response.UserResponseModel;
 import java.util.List;
 import java.util.Set;
 
+// Use Case Input Port
 public interface UserService {
     List<UserResponseModel> getUsers();
     UserResponseModel getUser(long id);

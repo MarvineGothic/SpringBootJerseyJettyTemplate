@@ -1,9 +1,9 @@
-package org.example.application.service.service;
+package org.example.infrastructure.datasource.repository;
 
 import org.example.domain.entity.AddressEntity;
-import org.example.infrastructure.persistence.entity.Address;
+import org.example.infrastructure.datasource.entity.Address;
 
-public class AddressRepositoryGateway {
+public class AddressRepositoryMapper {
 
     public static Address fromDomain(AddressEntity addressEntity) {
         return Address.builder()

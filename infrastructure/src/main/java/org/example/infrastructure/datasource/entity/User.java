@@ -1,4 +1,4 @@
-package org.example.infrastructure.persistence.entity;
+package org.example.infrastructure.datasource.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,7 +40,7 @@ public class User implements Serializable {
     @Column(name = "creation_time")
     private LocalDateTime creationTime;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "user_addresses",
             joinColumns = @JoinColumn(name = "user_id"),

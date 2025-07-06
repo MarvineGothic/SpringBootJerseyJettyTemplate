@@ -1,4 +1,4 @@
-package org.example.infrastructure.persistence.entity;
+package org.example.infrastructure.datasource.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

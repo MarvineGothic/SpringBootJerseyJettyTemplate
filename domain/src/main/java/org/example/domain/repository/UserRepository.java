@@ -5,10 +5,11 @@ import org.example.domain.entity.UserEntity;
 import java.util.List;
 import java.util.Optional;
 
+// DataAccess
 public interface UserRepository {
-    UserEntity save(UserEntity user);
-    List<UserEntity> findAll();
-    Optional<UserEntity> findById(Long id);
-    Optional<UserEntity> findByEmail(String email);
-    Optional<UserEntity> findByIdWithAddresses(Long id);
+    UserEntity createUser(UserEntity user);
+    List<UserEntity> getUsers();
+    Optional<UserEntity> getUserById(Long id);
+    Optional<UserEntity> getUserByEmail(String email);
+    Optional<UserEntity> getUserByIdWithAddresses(Long id);
 }

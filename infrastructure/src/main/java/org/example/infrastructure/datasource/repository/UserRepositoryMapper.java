@@ -1,11 +1,11 @@
-package org.example.application.service.service;
+package org.example.infrastructure.datasource.repository;
 
 import org.example.domain.entity.UserEntity;
-import org.example.infrastructure.persistence.entity.User;
+import org.example.infrastructure.datasource.entity.User;
 
 import java.util.List;
 
-public class UserRepositoryGateway {
+public class UserRepositoryMapper { // EntityMapper
 
     public static User fromDomain(UserEntity addressEntity) {
         return User.builder()

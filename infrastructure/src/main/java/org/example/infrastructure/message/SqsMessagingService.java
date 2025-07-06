@@ -1,9 +1,12 @@
-package org.example.event;
+package org.example.infrastructure.message;
 
 import com.github.f4b6a3.ulid.UlidCreator;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.RequiredArgsConstructor;
+import org.example.domain.event.MessageSender;
+import org.example.event.EventType;
+import org.example.domain.event.SqsMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +20,7 @@ import static io.awspring.cloud.sqs.listener.SqsHeaders.MessageSystemAttributes.
 
 @Service
 @RequiredArgsConstructor
-public class SqsMessagingService {
+public class SqsMessagingService implements MessageSender {
     public static final String EVENT_TYPE_CUSTOM_HEADER = "eventType";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SqsMessagingService.class);
