@@ -1,7 +1,7 @@
 package org.example.infrastructure.datasource.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.example.domain.entity.AddressEntity;
+import org.example.domain.entity.Address;
 import org.example.domain.repository.AddressRepository;
 import org.example.error.ServiceException;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class AddressRepositoryImpl implements AddressRepository {
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public AddressEntity save(long userId, AddressEntity address) {
+    public Address save(long userId, Address address) {
         var user = userJpaRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException("User not found", HttpStatus.NOT_FOUND.value()));
         var addresses = new ArrayList<>(user.getAddresses());
@@ -29,7 +29,7 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
-    public Optional<AddressEntity> findById(Long id) {
+    public Optional<Address> findById(Long id) {
         return addressJpaRepository.findById(id).map(AddressRepositoryMapper::toDomain);
     }
 }

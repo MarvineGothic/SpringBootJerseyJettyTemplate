@@ -2,7 +2,7 @@ package org.example.application.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.example.application.service.address.UserAddressService;
-import org.example.domain.entity.UserEntity;
+import org.example.domain.entity.User;
 import org.example.domain.event.EventPublisher;
 import org.example.domain.event.MessageSender;
 import org.example.domain.event.UserCreatedEvent;
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
         userRepository.getUserByEmail(userRequestModel.getEmail())
                 .ifPresent(user -> { throw new ServiceException("User already exist", HttpStatus.BAD_REQUEST.value()); });
 
-        var user = UserEntity.builder()
+        var user = User.builder()
                 .firstName(userRequestModel.getFirstName())
                 .lastName(userRequestModel.getLastName())
                 .email(userRequestModel.getEmail())
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
     }
 
     // Presenter logic
-    public static UserResponseModel mapUserResponse(UserEntity user) {
+    public static UserResponseModel mapUserResponse(User user) {
 //        var addressesResponse = user.getAddresses().stream().map(UserServiceImpl::mapAddressResponse).collect(Collectors.toSet());
         return UserResponseModel.builder()
                 .firstName(user.getFirstName())

@@ -1,7 +1,7 @@
 package org.example.application.service.address;
 
 import lombok.RequiredArgsConstructor;
-import org.example.domain.entity.AddressEntity;
+import org.example.domain.entity.Address;
 import org.example.domain.repository.AddressRepository;
 import org.example.model.request.AddressRequestModel;
 import org.example.model.response.AddressResponseModel;
@@ -27,8 +27,8 @@ public class UserAddressServiceImpl implements UserAddressService {
         return null;
     }
 
-    public static AddressEntity fromRequest(AddressRequestModel addressRequestModel) {
-        return AddressEntity.builder()
+    public static Address fromRequest(AddressRequestModel addressRequestModel) {
+        return Address.builder()
                 .house(addressRequestModel.getHouse())
                 .floor(addressRequestModel.getFloor())
                 .street(addressRequestModel.getStreet())
@@ -38,7 +38,7 @@ public class UserAddressServiceImpl implements UserAddressService {
                 .build();
     }
 
-    public static AddressResponseModel mapAddressResponse(AddressEntity address) {
+    public static AddressResponseModel mapAddressResponse(Address address) {
         return AddressResponseModel.builder()
                 .house(address.getHouse())
                 .floor(address.getFloor())

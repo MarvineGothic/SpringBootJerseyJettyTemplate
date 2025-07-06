@@ -1,10 +1,10 @@
 package org.example.domain.repository;
 
-import org.example.domain.entity.AddressEntity;
+import org.example.domain.entity.Address;
 
 import java.util.Optional;
 
 public interface AddressRepository {
-    AddressEntity save(long userId, AddressEntity address);
-    Optional<AddressEntity> findById(Long id);
+    Address save(long userId, Address address);
+    Optional<Address> findById(Long id);
 }

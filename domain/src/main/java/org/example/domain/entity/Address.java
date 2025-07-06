@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddressEntity {
+public class Address {
     private Long id;
 
     private String house;

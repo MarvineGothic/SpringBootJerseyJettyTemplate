@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity {
+public class User {
     private Long id;
 
     private String firstName;
@@ -26,5 +26,5 @@ public class UserEntity {
 
     private LocalDateTime creationTime;
 
-    private List<AddressEntity> addresses;
+    private List<Address> addresses;
 }

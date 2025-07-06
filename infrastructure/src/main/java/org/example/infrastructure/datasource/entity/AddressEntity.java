@@ -7,14 +7,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "Address")
 @Table(name = "addresses")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class Address implements Serializable {
+public class AddressEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,5 +38,5 @@ public class Address implements Serializable {
     private String country;
 
     @ManyToMany(mappedBy = "addresses")
-    private List<User> users = new ArrayList<>();
+    private List<UserEntity> users = new ArrayList<>();
 }

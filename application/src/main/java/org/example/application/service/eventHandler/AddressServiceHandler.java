@@ -2,7 +2,7 @@ package org.example.application.service.eventHandler;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.domain.entity.UserEntity;
+import org.example.domain.entity.User;
 import org.example.domain.event.UserCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,6 @@ public class AddressServiceHandler {
     @Transactional
     public void handle(UserCreatedEvent userCreatedEvent) {
         LOGGER.info("\nAddressService: Creating user address {}", Thread.currentThread().getName());
-        UserEntity user = (UserEntity) userCreatedEvent.event();
+        User user = (User) userCreatedEvent.event();
     }
 }
