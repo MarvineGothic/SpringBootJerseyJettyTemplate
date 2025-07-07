@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -19,17 +18,12 @@ public class AddressRepositoryImpl implements AddressRepository {
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public Address save(long userId, Address address) {
-        var user = userJpaRepository.findById(userId)
+    public Address save(String handle, Address address) {
+        var user = userJpaRepository.findByHandle(handle)
                 .orElseThrow(() -> new ServiceException("User not found", HttpStatus.NOT_FOUND.value()));
         var addresses = new ArrayList<>(user.getAddresses());
         addresses.add(AddressRepositoryMapper.fromDomain(address));
         user.setAddresses(addresses);
         return address;
-    }
-
-    @Override
-    public Optional<Address> findById(Long id) {
-        return addressJpaRepository.findById(id).map(AddressRepositoryMapper::toDomain);
     }
 }
