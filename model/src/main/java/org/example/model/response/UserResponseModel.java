@@ -13,6 +13,9 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponseModel extends AbstractResponseDto {
+    @JsonProperty("handle")
+    private String handle;
+
     @JsonProperty("firstname")
     private String firstName;
 

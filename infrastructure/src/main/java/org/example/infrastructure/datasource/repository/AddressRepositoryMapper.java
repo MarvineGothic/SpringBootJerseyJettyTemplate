@@ -1,6 +1,7 @@
 package org.example.infrastructure.datasource.repository;
 
 import org.example.domain.entity.Address;
+import org.example.domain.valueobject.PostCode;
 import org.example.infrastructure.datasource.entity.AddressEntity;
 
 public class AddressRepositoryMapper {
@@ -23,7 +24,7 @@ public class AddressRepositoryMapper {
                 .house(addressEntity.getHouse())
                 .floor(addressEntity.getFloor())
                 .street(addressEntity.getStreet())
-                .postCode(addressEntity.getPostCode())
+                .postCode(new PostCode(addressEntity.getPostCode()))
                 .city(addressEntity.getCity())
                 .country(addressEntity.getCountry())
                 .build();

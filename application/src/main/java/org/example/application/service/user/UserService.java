@@ -14,7 +14,7 @@ import java.util.Set;
 public interface UserService {
     UserSessionResponseModel login(UserLoginRequestModel userLoginRequestModel);
     List<UserResponseModel> getUsers();
-    UserResponseModel getUser(long id);
+    UserResponseModel getUser(String handle);
     UserResponseModel createUser(CreateUserRequestModel createUserRequestModel) throws ServiceException;
-    Set<AddressResponseModel> getUserAddresses(long id);
+    Set<AddressResponseModel> getUserAddresses(String handle);
 }

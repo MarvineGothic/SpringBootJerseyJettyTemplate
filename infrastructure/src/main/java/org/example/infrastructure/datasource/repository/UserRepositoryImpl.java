@@ -26,8 +26,8 @@ public class UserRepositoryImpl implements UserRepository { // DataSource
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
-        return userJpaRepository.findById(id).map(UserRepositoryMapper::toDomain);
+    public Optional<User> getUserByHandle(String handle) {
+        return userJpaRepository.findByHandle(handle).map(UserRepositoryMapper::toDomain);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class UserRepositoryImpl implements UserRepository { // DataSource
     }
 
     @Override
-    public Optional<User> getUserByIdWithAddresses(Long id) {
-        return userJpaRepository.findByIdWithAddresses(id).map(UserRepositoryMapper::toDomain);
+    public Optional<User> getUserByHandleWithAddresses(String handle) {
+        return userJpaRepository.findByHandleWithAddresses(handle).map(UserRepositoryMapper::toDomain);
     }
 }

@@ -1,6 +1,7 @@
 package org.example.domain.entity;
 
 import lombok.*;
+import org.example.domain.valueobject.PostCode;
 
 @Getter
 @Setter
@@ -16,9 +17,13 @@ public class Address {
 
     private String street;
 
-    private String postCode;
+    private PostCode postCode;
 
     private String city;
 
     private String country;
+
+    public String getPostCode() {
+        return postCode.postCode();
+    }
 }

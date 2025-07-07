@@ -19,7 +19,12 @@ import java.util.List;
 public class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Setter(AccessLevel.PRIVATE)
+//    @Getter(AccessLevel.PRIVATE)
     private Long id;
+
+    @Column(name = "handle", unique = true, updatable = false, nullable = false)
+    private String handle;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -27,7 +32,7 @@ public class UserEntity implements Serializable {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true, updatable = false, nullable = false)
     private String email;
 
     @Column(name = "password", nullable = false)

@@ -11,10 +11,12 @@ import java.util.Optional;
 @Repository
 public interface UserJpaRepository extends JpaRepository<UserEntity, Long> {
 
+    Optional<UserEntity> findByHandle(String handle);
+
     Optional<UserEntity> findByEmail(String email);
 
-    @Query("SELECT u FROM user u LEFT JOIN FETCH u.addresses WHERE u.id = :id")
-    Optional<UserEntity> findByIdWithAddresses(@Param("id") Long id);
+    @Query("SELECT u FROM user u LEFT JOIN FETCH u.addresses WHERE u.handle = :handle")
+    Optional<UserEntity> findByHandleWithAddresses(@Param("handle") String handle);
 
     //    @Query("select u from user u where u.firstName = :firstName and u.lastName = :lastName")
 //    List<User> findByLastNameAndFirstName(@Param("lastName") String lastName,

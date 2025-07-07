@@ -12,7 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private Long id;
+    private Long id; //remove
+
+    private String handle;
 
     private String firstName;
 

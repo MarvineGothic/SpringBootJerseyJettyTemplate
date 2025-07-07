@@ -3,6 +3,7 @@ package org.example.application.service.address;
 import lombok.RequiredArgsConstructor;
 import org.example.domain.entity.Address;
 import org.example.domain.repository.AddressRepository;
+import org.example.domain.valueobject.PostCode;
 import org.example.model.request.AddressRequestModel;
 import org.example.model.response.AddressResponseModel;
 import org.slf4j.Logger;
@@ -17,8 +18,8 @@ public class UserAddressServiceImpl implements UserAddressService {
     private final AddressRepository addressRepository;
 
     @Override
-    public AddressResponseModel addAddress(long userId, AddressRequestModel addressRequestModel) {
-        var address = addressRepository.save(userId, fromRequest(addressRequestModel));
+    public AddressResponseModel addAddress(String handle, AddressRequestModel addressRequestModel) {
+        var address = addressRepository.save(handle, fromRequest(addressRequestModel));
         return mapAddressResponse(address);
     }
 
@@ -32,7 +33,7 @@ public class UserAddressServiceImpl implements UserAddressService {
                 .house(addressRequestModel.getHouse())
                 .floor(addressRequestModel.getFloor())
                 .street(addressRequestModel.getStreet())
-                .postCode(addressRequestModel.getPostCode())
+                .postCode(new PostCode(addressRequestModel.getPostCode()))
                 .city(addressRequestModel.getCity())
                 .country(addressRequestModel.getCountry())
                 .build();

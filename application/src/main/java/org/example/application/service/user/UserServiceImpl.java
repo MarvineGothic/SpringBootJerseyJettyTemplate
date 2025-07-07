@@ -1,5 +1,6 @@
 package org.example.application.service.user;
 
+import com.github.f4b6a3.ulid.Ulid;
 import lombok.RequiredArgsConstructor;
 import org.example.application.service.address.UserAddressService;
 import org.example.authentication.BasicAuthenticationService;
@@ -61,8 +62,8 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
     @Override
     @Transactional
     @Cacheable("users")
-    public UserResponseModel getUser(long id) {
-        var user = userRepository.getUserById(id).orElseThrow(() -> new ServiceException("User not found", 404));
+    public UserResponseModel getUser(String handle) {
+        var user = userRepository.getUserByHandle(handle).orElseThrow(() -> new ServiceException("User not found", 404));
         return mapUserResponse(user);
     }
 
@@ -70,9 +71,12 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
     @Transactional
     public UserResponseModel createUser(CreateUserRequestModel createUserRequestModel) throws ServiceException {
         userRepository.getUserByEmail(createUserRequestModel.getEmail())
-                .ifPresent(user -> { throw new ServiceException("User already exist", HttpStatus.BAD_REQUEST.value()); });
+                .ifPresent(user -> {
+                    throw new ServiceException("User already exist", HttpStatus.BAD_REQUEST.value());
+                });
 
         var user = User.builder()
+                .handle(Ulid.fast().toLowerCase())
                 .firstName(createUserRequestModel.getFirstName())
                 .lastName(createUserRequestModel.getLastName())
                 .email(createUserRequestModel.getEmail())
@@ -82,7 +86,7 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
                 .build();
         user = userRepository.createUser(user);
         for (var addressRequest : createUserRequestModel.getAddresses()) {
-            userAddressService.addAddress(user.getId(), addressRequest);
+            userAddressService.addAddress(user.getHandle(), addressRequest);
         }
 
         notificationService.sendMessage(EventType.USER_CREATED, user);
@@ -94,8 +98,8 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
 
     @Override
     @Transactional
-    public Set<AddressResponseModel> getUserAddresses(long id) {
-        var user = userRepository.getUserByIdWithAddresses(id).orElseThrow(() -> new ServiceException("User not found", 404));
+    public Set<AddressResponseModel> getUserAddresses(String handle) {
+        var user = userRepository.getUserByHandleWithAddresses(handle).orElseThrow(() -> new ServiceException("User not found", 404));
 //        return user.getAddresses().stream().map(UserServiceImpl::mapAddressResponse).collect(Collectors.toSet());
         return null;
     }
@@ -104,6 +108,7 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
     public static UserResponseModel mapUserResponse(User user) {
 //        var addressesResponse = user.getAddresses().stream().map(UserServiceImpl::mapAddressResponse).collect(Collectors.toSet());
         return UserResponseModel.builder()
+                .handle(user.getHandle())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())

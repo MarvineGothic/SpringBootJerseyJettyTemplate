@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -52,17 +53,17 @@ public class UserResource {
     }
 
     @GET
-    @Path("/{userId}")
+    @Path("/{handle}")
     @Produces(MediaType.APPLICATION_JSON)
-    public UserResponseModel getUser(@NotNull @PathParam("userId") Long userId) {
-        return userService.getUser(userId);
+    public UserResponseModel getUser(@NotBlank @PathParam("handle") String handle) {
+        return userService.getUser(handle);
     }
 
     @GET
-    @Path("/{userId}/addresses")
+    @Path("/{handle}/addresses")
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<AddressResponseModel> getUserAddresses(@NotNull @PathParam("userId") Long userId) {
-        return userService.getUserAddresses(userId);
+    public Set<AddressResponseModel> getUserAddresses(@NotNull @PathParam("handle") String handle) {
+        return userService.getUserAddresses(handle);
     }
 
     @POST

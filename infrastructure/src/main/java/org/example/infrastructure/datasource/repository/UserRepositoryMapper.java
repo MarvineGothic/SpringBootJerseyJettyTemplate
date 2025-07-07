@@ -7,22 +7,24 @@ import java.util.List;
 
 public class UserRepositoryMapper { // EntityMapper
 
-    public static UserEntity fromDomain(User addressEntity) {
+    public static UserEntity fromDomain(User user) {
         return UserEntity.builder()
-                .id(addressEntity.getId())
-                .firstName(addressEntity.getFirstName())
-                .lastName(addressEntity.getLastName())
-                .email(addressEntity.getEmail())
-                .password(addressEntity.getPassword())
-                .accessRole(addressEntity.getAccessRole())
-                .creationTime(addressEntity.getCreationTime())
+//                .id(null)
+                .handle(user.getHandle())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .accessRole(user.getAccessRole())
+                .creationTime(user.getCreationTime())
                 .addresses(List.of())
                 .build();
     }
 
     public static User toDomain(UserEntity userEntity) {
         return User.builder()
-                .id(userEntity.getId())
+                .id(userEntity.getId()) // delete
+                .handle(userEntity.getHandle())
                 .firstName(userEntity.getFirstName())
                 .lastName(userEntity.getLastName())
                 .email(userEntity.getEmail())

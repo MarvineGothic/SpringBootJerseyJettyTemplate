@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface UserRepository {
     User createUser(User user);
     List<User> getUsers();
-    Optional<User> getUserById(Long id);
+    Optional<User> getUserByHandle(String handle);
     Optional<User> getUserByEmail(String email);
-    Optional<User> getUserByIdWithAddresses(Long id);
+    Optional<User> getUserByHandleWithAddresses(String handle);
 }
