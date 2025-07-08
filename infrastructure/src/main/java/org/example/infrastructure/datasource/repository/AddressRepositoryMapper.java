@@ -1,6 +1,6 @@
 package org.example.infrastructure.datasource.repository;
 
-import org.example.domain.entity.Address;
+import org.example.domain.valueobject.Address;
 import org.example.domain.valueobject.PostCode;
 import org.example.infrastructure.datasource.entity.AddressEntity;
 
@@ -8,7 +8,6 @@ public class AddressRepositoryMapper {
 
     public static AddressEntity fromDomain(Address address) {
         return AddressEntity.builder()
-                .id(address.getId())
                 .house(address.getHouse())
                 .floor(address.getFloor())
                 .street(address.getStreet())
@@ -20,7 +19,6 @@ public class AddressRepositoryMapper {
 
     public static Address toDomain(AddressEntity addressEntity) {
         return Address.builder()
-                .id(addressEntity.getId())
                 .house(addressEntity.getHouse())
                 .floor(addressEntity.getFloor())
                 .street(addressEntity.getStreet())

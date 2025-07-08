@@ -83,6 +83,7 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
                 .password(createUserRequestModel.getPassword())
                 .accessRole(createUserRequestModel.getAccessRole())
                 .creationTime(LocalDateTime.now())
+                .addresses(List.of())
                 .build();
         user = userRepository.createUser(user);
         for (var addressRequest : createUserRequestModel.getAddresses()) {

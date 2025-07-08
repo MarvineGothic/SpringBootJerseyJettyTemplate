@@ -2,8 +2,10 @@ package org.example.domain.entity;
 
 import lombok.*;
 import org.example.authorization.AccessRole;
+import org.example.domain.valueobject.Address;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -12,8 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private Long id; //remove
-
     private String handle;
 
     private String firstName;
@@ -28,5 +28,5 @@ public class User {
 
     private LocalDateTime creationTime;
 
-    private List<Address> addresses;
+    private List<Address> addresses = new ArrayList<>();
 }

@@ -1,31 +1,25 @@
 package org.example.application.service.address;
 
 import lombok.RequiredArgsConstructor;
-import org.example.domain.entity.Address;
-import org.example.domain.repository.AddressRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.example.domain.repository.UserRepository;
+import org.example.domain.valueobject.Address;
 import org.example.domain.valueobject.PostCode;
 import org.example.model.request.AddressRequestModel;
 import org.example.model.response.AddressResponseModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserAddressServiceImpl implements UserAddressService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserAddressServiceImpl.class);
 
-    private final AddressRepository addressRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public AddressResponseModel addAddress(String handle, AddressRequestModel addressRequestModel) {
-        var address = addressRepository.save(handle, fromRequest(addressRequestModel));
+    public AddressResponseModel addAddress(String userHandle, AddressRequestModel addressRequestModel) {
+        var address = userRepository.addAddress(userHandle, fromRequest(addressRequestModel));
         return mapAddressResponse(address);
-    }
-
-    @Override
-    public AddressResponseModel getAddress(long id) {
-        return null;
     }
 
     public static Address fromRequest(AddressRequestModel addressRequestModel) {

@@ -1,9 +1,11 @@
 package org.example.infrastructure.datasource.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import lombok.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,12 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Builder
-public class AddressEntity implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class AddressEntity extends JpaEntity {
 
     @Column(name = "house")
     private String house;
@@ -37,6 +35,7 @@ public class AddressEntity implements Serializable {
     @Column(name = "country")
     private String country;
 
+    @Setter
     @ManyToMany(mappedBy = "addresses")
     private List<UserEntity> users = new ArrayList<>();
 }

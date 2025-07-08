@@ -9,7 +9,6 @@ public class UserRepositoryMapper { // EntityMapper
 
     public static UserEntity fromDomain(User user) {
         return UserEntity.builder()
-//                .id(null)
                 .handle(user.getHandle())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
@@ -17,13 +16,12 @@ public class UserRepositoryMapper { // EntityMapper
                 .password(user.getPassword())
                 .accessRole(user.getAccessRole())
                 .creationTime(user.getCreationTime())
-                .addresses(List.of())
+                .addresses(user.getAddresses().stream().map(AddressRepositoryMapper::fromDomain).toList())
                 .build();
     }
 
     public static User toDomain(UserEntity userEntity) {
         return User.builder()
-                .id(userEntity.getId()) // delete
                 .handle(userEntity.getHandle())
                 .firstName(userEntity.getFirstName())
                 .lastName(userEntity.getLastName())
@@ -31,6 +29,7 @@ public class UserRepositoryMapper { // EntityMapper
                 .password(userEntity.getPassword())
                 .accessRole(userEntity.getAccessRole())
                 .creationTime(userEntity.getCreationTime())
+                .addresses(userEntity.getAddresses().stream().map(AddressRepositoryMapper::toDomain).toList())
                 .build();
     }
 }

@@ -4,24 +4,17 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.example.authorization.AccessRole;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "user")
 @Table(name = "users")
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@Setter
 @Builder
-public class UserEntity implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Setter(AccessLevel.PRIVATE)
-//    @Getter(AccessLevel.PRIVATE)
-    private Long id;
+public class UserEntity extends JpaEntity {
 
     @Column(name = "handle", unique = true, updatable = false, nullable = false)
     private String handle;
@@ -32,7 +25,7 @@ public class UserEntity implements Serializable {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "email", unique = true, updatable = false, nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "password", nullable = false)
@@ -50,5 +43,6 @@ public class UserEntity implements Serializable {
             name = "user_addresses",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id"))
+    @Setter
     private List<AddressEntity> addresses = new ArrayList<>();
 }

@@ -3,9 +3,13 @@ package org.example.infrastructure.datasource.repository;
 import lombok.RequiredArgsConstructor;
 import org.example.domain.entity.User;
 import org.example.domain.repository.UserRepository;
+import org.example.domain.valueobject.Address;
+import org.example.error.ServiceException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,5 +42,14 @@ public class UserRepositoryImpl implements UserRepository { // DataSource
     @Override
     public Optional<User> getUserByHandleWithAddresses(String handle) {
         return userJpaRepository.findByHandleWithAddresses(handle).map(UserRepositoryMapper::toDomain);
+    }
+    @Override
+    public Address addAddress(String userHandle, Address address) {
+        var user = userJpaRepository.findByHandle(userHandle)
+                .orElseThrow(() -> new ServiceException("User not found", HttpStatus.NOT_FOUND.value()));
+        var addresses = new ArrayList<>(user.getAddresses());
+        addresses.add(AddressRepositoryMapper.fromDomain(address));
+        user.setAddresses(addresses);
+        return address;
     }
 }

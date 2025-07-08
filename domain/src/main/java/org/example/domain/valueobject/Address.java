@@ -1,7 +1,6 @@
-package org.example.domain.entity;
+package org.example.domain.valueobject;
 
 import lombok.*;
-import org.example.domain.valueobject.PostCode;
 
 @Getter
 @Setter
@@ -9,8 +8,6 @@ import org.example.domain.valueobject.PostCode;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
-    private Long id;
-
     private String house;
 
     private String floor;
