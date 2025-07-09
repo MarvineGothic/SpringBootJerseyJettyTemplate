@@ -4,6 +4,7 @@ import com.github.f4b6a3.ulid.Ulid;
 import lombok.RequiredArgsConstructor;
 import org.example.application.service.address.UserAddressService;
 import org.example.authentication.BasicAuthenticationService;
+import org.example.authentication.JwtAuthenticationService;
 import org.example.domain.entity.User;
 import org.example.domain.event.EventPublisher;
 import org.example.domain.event.MessageSender;
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final BasicAuthenticationService basicAuthenticationService;
+    private final JwtAuthenticationService jwtAuthenticationService;
     private final UserRepository userRepository;
     private final UserAddressService userAddressService;
     private final MessageSender notificationService;
@@ -47,8 +49,12 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
             throw new ServiceException("Bad credentials", HttpStatus.BAD_REQUEST.value());
         }
 
+//        return UserSessionResponseModel.builder()
+//                .sessionToken(basicAuthenticationService.getBasicAuthenticationToken(user.getEmail(), user.getPassword()))
+//                .build();
+
         return UserSessionResponseModel.builder()
-                .sessionToken(basicAuthenticationService.getBasicAuthenticationToken(user.getEmail(), user.getPassword()))
+                .sessionToken(jwtAuthenticationService.generateJwt(user.getHandle(), user.getEmail(), user.getAccessRole().name()))
                 .build();
     }
 

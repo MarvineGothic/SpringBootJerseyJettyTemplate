@@ -11,9 +11,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.Provider;
-import org.apache.commons.lang3.NotImplementedException;
-import org.example.authentication.Authenticated;
-import org.example.authentication.BasicAuthenticationService;
+import org.example.authentication.*;
 import org.example.error.ResponseError;
 
 import java.lang.reflect.Method;
@@ -23,9 +21,14 @@ import java.time.LocalDateTime;
 @Authenticated // Binds this filter to methods annotated with @Authenticated
 @Priority(Priorities.AUTHENTICATION) // Ensures it runs early in the request pipeline
 public class AuthenticationFilter implements ContainerRequestFilter {
+    private static final String BASIC_AUTH_PREFIX = "Basic ";
+    private static final String BEARER_AUTH_PREFIX = "Bearer ";
 
     @Inject
     private BasicAuthenticationService basicAuthenticationService;
+
+    @Inject
+    private JwtAuthenticationService jwtAuthenticationService;
 
     @Context
     private SecurityContext securityContext;
@@ -52,8 +55,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                         .entity(getUnauthorizedError())
                         .build()
                 );
-            } else if (authHeader.startsWith("Basic ")) { // Basic is deprecating. Use JWT or OAUTH
-                String token = authHeader.substring(6);
+            } else if (authHeader.startsWith(BASIC_AUTH_PREFIX)) { // Basic is deprecating. Use JWT or OAUTH
+                String token = authHeader.replace(BASIC_AUTH_PREFIX, "");
                 var userSecurityContext = basicAuthenticationService.validateBasicAuthenticationToken(token);
                 if (userSecurityContext == null) {
                     requestContext.abortWith(Response
@@ -64,9 +67,18 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 }
 
                 requestContext.setSecurityContext(userSecurityContext);
-            } else if (authHeader.startsWith("Bearer ")) {
-                String token = authHeader.substring(7);
-                throw new NotImplementedException();
+            } else if (authHeader.startsWith(BEARER_AUTH_PREFIX)) {
+                String token = authHeader.replace(BEARER_AUTH_PREFIX, "");
+                var userJwtPayload = jwtAuthenticationService.parseJwt(token);
+
+                var userPrincipal = new UserPrincipal();
+                userPrincipal.setUsername(userJwtPayload.email());
+
+                var userSecurityContext = new UserSecurityContext();
+                userSecurityContext.setUserRole(userJwtPayload.role());
+                userSecurityContext.setUserPrincipal(userPrincipal);
+
+                requestContext.setSecurityContext(userSecurityContext);
             } else {
                 requestContext.abortWith(Response
                         .status(Response.Status.UNAUTHORIZED)
