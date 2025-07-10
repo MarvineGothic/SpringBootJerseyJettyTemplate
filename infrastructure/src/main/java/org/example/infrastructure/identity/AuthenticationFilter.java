@@ -47,45 +47,46 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         if (method.isAnnotationPresent(Authenticated.class) ||
                 resourceInfo.getResourceClass().isAnnotationPresent(Authenticated.class)) {
 
-            // Simulated authentication logic
+            AuthenticatedUser authenticatedUser = null;
+
             String authHeader = requestContext.getHeaderString("Authorization");
-            if (authHeader == null) {
-                requestContext.abortWith(Response
-                        .status(Response.Status.UNAUTHORIZED)
-                        .entity(getUnauthorizedError())
-                        .build()
-                );
+            if (authHeader == null || authHeader.isBlank()) {
+                abortContextWithUnauthorized(requestContext);
+                return;
             } else if (authHeader.startsWith(BASIC_AUTH_PREFIX)) { // Basic is deprecating. Use JWT or OAUTH
                 String token = authHeader.replace(BASIC_AUTH_PREFIX, "");
-                var userSecurityContext = basicAuthenticationService.validateBasicAuthenticationToken(token);
-                if (userSecurityContext == null) {
-                    requestContext.abortWith(Response
-                            .status(Response.Status.UNAUTHORIZED)
-                            .entity(getUnauthorizedError())
-                            .build()
-                    );
-                }
-
-                requestContext.setSecurityContext(userSecurityContext);
+                authenticatedUser = basicAuthenticationService.authenticate(token);
             } else if (authHeader.startsWith(BEARER_AUTH_PREFIX)) {
                 String token = authHeader.replace(BEARER_AUTH_PREFIX, "");
-                var userJwtPayload = jwtAuthenticationService.parseJwt(token);
-
-                var userPrincipal = new UserPrincipal();
-                userPrincipal.setUsername(userJwtPayload.email());
-
-                var userSecurityContext = new UserSecurityContext();
-                userSecurityContext.setUserRole(userJwtPayload.role());
-                userSecurityContext.setUserPrincipal(userPrincipal);
-
-                requestContext.setSecurityContext(userSecurityContext);
-            } else {
-                requestContext.abortWith(Response
-                        .status(Response.Status.UNAUTHORIZED)
-                        .entity(getUnauthorizedError())
-                        .build());
+                authenticatedUser = jwtAuthenticationService.authenticate(token);
             }
+
+            if (authenticatedUser == null) {
+                abortContextWithUnauthorized(requestContext);
+                return;
+            }
+
+            setSecurityContext(requestContext, authenticatedUser);
         }
+    }
+
+    private void setSecurityContext(ContainerRequestContext requestContext, AuthenticatedUser authenticatedUser) {
+        var userPrincipal = new UserPrincipal();
+        userPrincipal.setUsername(authenticatedUser.handle());
+        userPrincipal.setEmail(authenticatedUser.email());
+
+        var userSecurityContext = new UserSecurityContext();
+        userSecurityContext.setUserRole(authenticatedUser.role());
+        userSecurityContext.setUserPrincipal(userPrincipal);
+
+        requestContext.setSecurityContext(userSecurityContext);
+    }
+
+    private void abortContextWithUnauthorized(ContainerRequestContext requestContext) {
+        requestContext.abortWith(Response
+                .status(Response.Status.UNAUTHORIZED)
+                .entity(getUnauthorizedError())
+                .build());
     }
 
     private ResponseError getUnauthorizedError() {

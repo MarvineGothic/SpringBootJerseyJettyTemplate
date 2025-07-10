@@ -1,13 +1,17 @@
 package org.example.infrastructure.identity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.authentication.AuthenticatedUser;
 import org.example.authentication.JwtAuthenticationService;
-import org.example.authentication.UserJwtPayload;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +20,11 @@ import java.time.Instant;
 import java.util.Date;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class UserJwtAuthenticationService implements JwtAuthenticationService {
+    private final ObjectMapper objectMapper;
+
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -35,7 +43,7 @@ public class UserJwtAuthenticationService implements JwtAuthenticationService {
     }
 
     @Override
-    public String generateJwt(String userName, String email, String role) {
+    public String generateToken(String userName, String email, String role) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .header()
@@ -51,23 +59,26 @@ public class UserJwtAuthenticationService implements JwtAuthenticationService {
     }
 
     @Override
-    public UserJwtPayload parseJwt(String jwt) {
-        var claims = validateJwt(jwt).getPayload();
+    public AuthenticatedUser authenticate(String token) {
+        try {
+            var payload = validateToken(token).getPayload();
 
-        return new UserJwtPayload(
-                claims.getSubject(),
-                claims.get("email", String.class),
-                claims.get("role", String.class),
-                claims.getExpiration(),
-                claims.getIssuedAt()
-        );
+            return AuthenticatedUser.builder()
+                    .handle(payload.getSubject())
+                    .email(payload.get("email", String.class))
+                    .role(payload.get("role", String.class))
+                    .build();
+        } catch (JwtException e) {
+            log.error("\nInvalid jwt: {}", e.toString());
+            return null;
+        }
     }
 
-    private Jws<Claims> validateJwt(String jwt) {
+    private Jws<Claims> validateToken(String token) {
         return Jwts.parser()
                 .verifyWith(signingKey)
                 .build()
-                .parseSignedClaims(jwt);
+                .parseSignedClaims(token);
     }
 }
 

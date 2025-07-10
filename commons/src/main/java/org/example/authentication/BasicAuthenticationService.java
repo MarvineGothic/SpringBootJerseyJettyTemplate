@@ -1,6 +1,6 @@
 package org.example.authentication;
 
 public interface BasicAuthenticationService {
-    String getBasicAuthenticationToken(String username, String password);
-    UserSecurityContext validateBasicAuthenticationToken(String token);
+    String generateToken(String username, String password);
+    AuthenticatedUser authenticate(String token);
 }

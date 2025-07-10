@@ -8,7 +8,7 @@ import java.security.Principal;
 @Setter
 public class UserSecurityContext implements SecurityContext {
     public static final String BEARER_AUTH = "BEARER";
-    private UserPrincipal userPrincipal;
+    private Principal userPrincipal;
     private String userRole;
     private boolean isSecure;
 

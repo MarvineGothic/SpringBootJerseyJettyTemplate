@@ -2,6 +2,7 @@ package org.example.application.service.user;
 
 import com.github.f4b6a3.ulid.Ulid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.application.service.address.UserAddressService;
 import org.example.authentication.BasicAuthenticationService;
 import org.example.authentication.JwtAuthenticationService;
@@ -17,10 +18,9 @@ import org.example.model.request.UserLoginRequestModel;
 import org.example.model.response.AddressResponseModel;
 import org.example.model.response.UserResponseModel;
 import org.example.model.response.UserSessionResponseModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +31,8 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService { // Use Case Interactor
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final BasicAuthenticationService basicAuthenticationService;
     private final JwtAuthenticationService jwtAuthenticationService;
@@ -40,21 +40,34 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
     private final UserAddressService userAddressService;
     private final MessageSender notificationService;
     private final EventPublisher eventPublisher;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserSessionResponseModel login(UserLoginRequestModel userLoginRequestModel) {
         var user = userRepository.getUserByEmail(userLoginRequestModel.getEmail())
                 .orElseThrow(() -> new ServiceException("Bad credentials", HttpStatus.BAD_REQUEST.value()));
-        if (!user.getPassword().equals(userLoginRequestModel.getPassword())) { // use password encryption/decryption
+
+        if (!passwordEncoder.matches(userLoginRequestModel.getPassword(), user.getPassword())) {
             throw new ServiceException("Bad credentials", HttpStatus.BAD_REQUEST.value());
         }
 
-//        return UserSessionResponseModel.builder()
-//                .sessionToken(basicAuthenticationService.getBasicAuthenticationToken(user.getEmail(), user.getPassword()))
-//                .build();
+        return UserSessionResponseModel.builder()
+                .sessionToken(jwtAuthenticationService.generateToken(user.getHandle(), user.getEmail(), user.getAccessRole().name()))
+                .build();
+    }
+
+    @Deprecated
+    @Override
+    public UserSessionResponseModel loginBasic(UserLoginRequestModel userLoginRequestModel) {
+        var user = userRepository.getUserByEmail(userLoginRequestModel.getEmail())
+                .orElseThrow(() -> new ServiceException("Bad credentials", HttpStatus.BAD_REQUEST.value()));
+
+        if (!passwordEncoder.matches(userLoginRequestModel.getPassword(), user.getPassword())) {
+            throw new ServiceException("Bad credentials", HttpStatus.BAD_REQUEST.value());
+        }
 
         return UserSessionResponseModel.builder()
-                .sessionToken(jwtAuthenticationService.generateJwt(user.getHandle(), user.getEmail(), user.getAccessRole().name()))
+                .sessionToken(basicAuthenticationService.generateToken(user.getEmail(), user.getPassword()))
                 .build();
     }
 
@@ -86,7 +99,7 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
                 .firstName(createUserRequestModel.getFirstName())
                 .lastName(createUserRequestModel.getLastName())
                 .email(createUserRequestModel.getEmail())
-                .password(createUserRequestModel.getPassword())
+                .password(passwordEncoder.encode(createUserRequestModel.getPassword()))
                 .accessRole(createUserRequestModel.getAccessRole())
                 .creationTime(LocalDateTime.now())
                 .addresses(List.of())
@@ -99,7 +112,7 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
         notificationService.sendMessage(EventType.USER_CREATED, user);
         eventPublisher.publish(new UserCreatedEvent(this, user));
 
-        LOGGER.info("\nUser created");
+        log.info("\nUser created {}", user.toString());
         return mapUserResponse(user);
     }
 

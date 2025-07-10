@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserResource {
     private final UserService userService;
+
+    @Context
+    private ContainerRequestContext requestContext;
 
     @GET
     @Path("/exception")
@@ -73,6 +78,14 @@ public class UserResource {
         return userService.login(userLoginRequestModel);
     }
 
+    @Deprecated
+    @POST
+    @Path("/login/basic")
+    @Produces(MediaType.APPLICATION_JSON)
+    public UserSessionResponseModel userLoginBasic(@RequestBody @Valid @NotNull UserLoginRequestModel userLoginRequestModel) {
+        return userService.loginBasic(userLoginRequestModel);
+    }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -86,7 +99,7 @@ public class UserResource {
     @RolesAllowed(value = {"ROLE_USER"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAuthenticatedUser() {
-        var users = userService.getUsers();
-        return Response.ok(users).build();
+        var userPrincipal = requestContext.getSecurityContext().getUserPrincipal();
+        return Response.ok(userPrincipal).build();
     }
 }
