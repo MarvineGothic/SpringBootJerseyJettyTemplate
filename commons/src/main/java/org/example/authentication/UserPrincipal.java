@@ -1,5 +1,6 @@
 package org.example.authentication;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,12 +10,14 @@ import java.security.Principal;
 @Getter
 @Setter
 public class UserPrincipal implements Principal {
-    private String username;
-    private String email;
+    private String name;
+
+    @JsonProperty("authenticated_user")
+    private AuthUser authUser;
 
     @Override
     public String getName() {
-        return username;
+        return name;
     }
 
     @Override

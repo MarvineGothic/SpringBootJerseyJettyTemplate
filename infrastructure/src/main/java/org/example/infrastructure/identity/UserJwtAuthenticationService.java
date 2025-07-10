@@ -10,7 +10,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.authentication.AuthenticatedUser;
+import org.example.authentication.AuthUser;
 import org.example.authentication.JwtAuthenticationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -59,11 +59,11 @@ public class UserJwtAuthenticationService implements JwtAuthenticationService {
     }
 
     @Override
-    public AuthenticatedUser authenticate(String token) {
+    public AuthUser authenticate(String token) {
         try {
             var payload = validateToken(token).getPayload();
 
-            return AuthenticatedUser.builder()
+            return AuthUser.builder()
                     .handle(payload.getSubject())
                     .email(payload.get("email", String.class))
                     .role(payload.get("role", String.class))

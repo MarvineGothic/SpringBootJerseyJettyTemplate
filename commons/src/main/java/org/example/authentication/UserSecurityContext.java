@@ -11,6 +11,7 @@ public class UserSecurityContext implements SecurityContext {
     private Principal userPrincipal;
     private String userRole;
     private boolean isSecure;
+    private String schema;
 
     @Override
     public Principal getUserPrincipal() {
@@ -19,11 +20,12 @@ public class UserSecurityContext implements SecurityContext {
 
     @Override
     public boolean isUserInRole(String s) {
-        return s.equals(userRole);
+        return s.equalsIgnoreCase(userRole);
     }
 
     @Override
     public boolean isSecure() {
+//        return "https".equalsIgnoreCase(scheme);
         return isSecure;
     }
 

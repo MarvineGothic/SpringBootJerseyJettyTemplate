@@ -1,7 +1,7 @@
 package org.example.infrastructure.identity;
 
 import lombok.RequiredArgsConstructor;
-import org.example.authentication.AuthenticatedUser;
+import org.example.authentication.AuthUser;
 import org.example.authentication.BasicAuthenticationService;
 import org.example.domain.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,11 +23,11 @@ public class UserBasicAuthenticationService implements BasicAuthenticationServic
     }
 
     @Override
-    public AuthenticatedUser authenticate(String token) {
+    public AuthUser authenticate(String token) {
         return validateToken(token);
     }
 
-    private AuthenticatedUser validateToken(String token) {
+    private AuthUser validateToken(String token) {
         try {
             var decodedToken = new String(Base64.getDecoder().decode(token), StandardCharsets.UTF_8);
             var tokenizer = new StringTokenizer(decodedToken, ":");
@@ -38,7 +38,7 @@ public class UserBasicAuthenticationService implements BasicAuthenticationServic
             var password = tokenizer.nextToken();
             return userRepository.getUserByEmail(email)
                     .filter(u -> passwordEncoder.matches(password, u.getPassword()))
-                    .map(u -> AuthenticatedUser.builder()
+                    .map(u -> AuthUser.builder()
                             .handle(u.getHandle())
                             .email(u.getEmail())
                             .role(u.getAccessRole().name())

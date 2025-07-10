@@ -3,23 +3,24 @@ package org.example.api.resource;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.container.ContainerRequestContext;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
-import org.example.authentication.Authenticated;
+import org.example.application.service.user.UserService;
+import org.example.authentication.AuthUser;
+import org.example.authentication.annotation.Authenticated;
+import org.example.authentication.annotation.AuthenticatedUser;
+import org.example.authorization.AccessRole;
+import org.example.authorization.RequireRole;
 import org.example.error.ServiceException;
 import org.example.model.request.CreateUserRequestModel;
 import org.example.model.request.UserLoginRequestModel;
 import org.example.model.response.AddressResponseModel;
 import org.example.model.response.UserResponseModel;
-import org.example.application.service.user.UserService;
 import org.example.model.response.UserSessionResponseModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,9 +40,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserResource {
     private final UserService userService;
-
-    @Context
-    private ContainerRequestContext requestContext;
 
     @GET
     @Path("/exception")
@@ -94,12 +92,20 @@ public class UserResource {
     }
 
     @GET
-    @Path("/authenticated")
+    @Path("/authenticated_user")
     @Authenticated
-    @RolesAllowed(value = {"ROLE_USER"})
+    @RequireRole({AccessRole.ROLE_USER, AccessRole.ROLE_ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAuthenticatedUser() {
-        var userPrincipal = requestContext.getSecurityContext().getUserPrincipal();
-        return Response.ok(userPrincipal).build();
+    public Response getAuthenticatedUser(@AuthenticatedUser AuthUser authUser) {
+        return Response.ok(authUser).build();
+    }
+
+    @GET
+    @Path("/authenticated_admin")
+    @Authenticated
+    @RequireRole(AccessRole.ROLE_ADMIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAuthenticatedAdmin(@AuthenticatedUser AuthUser authUser) {
+        return Response.ok(authUser).build();
     }
 }

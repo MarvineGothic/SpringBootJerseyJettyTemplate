@@ -1,4 +1,4 @@
-package org.example.authentication;
+package org.example.authentication.annotation;
 
 import jakarta.ws.rs.NameBinding;
 

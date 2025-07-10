@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.Provider;
 import org.example.authentication.*;
+import org.example.authentication.annotation.Authenticated;
 import org.example.error.ResponseError;
 
 import java.lang.reflect.Method;
@@ -47,7 +48,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         if (method.isAnnotationPresent(Authenticated.class) ||
                 resourceInfo.getResourceClass().isAnnotationPresent(Authenticated.class)) {
 
-            AuthenticatedUser authenticatedUser = null;
+            AuthUser authUser = null;
 
             String authHeader = requestContext.getHeaderString("Authorization");
             if (authHeader == null || authHeader.isBlank()) {
@@ -55,29 +56,30 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 return;
             } else if (authHeader.startsWith(BASIC_AUTH_PREFIX)) { // Basic is deprecating. Use JWT or OAUTH
                 String token = authHeader.replace(BASIC_AUTH_PREFIX, "");
-                authenticatedUser = basicAuthenticationService.authenticate(token);
+                authUser = basicAuthenticationService.authenticate(token);
             } else if (authHeader.startsWith(BEARER_AUTH_PREFIX)) {
                 String token = authHeader.replace(BEARER_AUTH_PREFIX, "");
-                authenticatedUser = jwtAuthenticationService.authenticate(token);
+                authUser = jwtAuthenticationService.authenticate(token);
             }
 
-            if (authenticatedUser == null) {
+            if (authUser == null) {
                 abortContextWithUnauthorized(requestContext);
                 return;
             }
 
-            setSecurityContext(requestContext, authenticatedUser);
+            setSecurityContext(requestContext, authUser);
         }
     }
 
-    private void setSecurityContext(ContainerRequestContext requestContext, AuthenticatedUser authenticatedUser) {
+    private void setSecurityContext(ContainerRequestContext requestContext, AuthUser authUser) {
         var userPrincipal = new UserPrincipal();
-        userPrincipal.setUsername(authenticatedUser.handle());
-        userPrincipal.setEmail(authenticatedUser.email());
+        userPrincipal.setName(authUser.handle());
+        userPrincipal.setAuthUser(authUser);
 
         var userSecurityContext = new UserSecurityContext();
-        userSecurityContext.setUserRole(authenticatedUser.role());
+        userSecurityContext.setUserRole(authUser.role());
         userSecurityContext.setUserPrincipal(userPrincipal);
+        userSecurityContext.setSchema(requestContext.getUriInfo().getRequestUri().getScheme());
 
         requestContext.setSecurityContext(userSecurityContext);
     }
