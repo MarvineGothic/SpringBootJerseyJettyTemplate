@@ -8,6 +8,7 @@ import org.example.model.AbstractRequestDto;
 import org.example.authorization.AccessRole;
 import org.example.converter.EnumConverter;
 import org.example.validator.emailvalidator.ValidEmail;
+import org.example.validator.enumvalidator.ValidEnum;
 
 import java.util.List;
 
@@ -18,23 +19,22 @@ import java.util.List;
 @AllArgsConstructor
 public class CreateUserRequestModel implements AbstractRequestDto {
     @NotBlank
-    @JsonProperty("firstname")
+    @JsonProperty(value = "firstname", required = true)
     private String firstName;
 
     @NotBlank
-    @JsonProperty("lastname")
+    @JsonProperty(value = "lastname", required = true)
     private String lastName;
 
-    @NotBlank
-    @JsonProperty("password")
+    @NotBlank(message = "Invalid password")
+    @JsonProperty(value = "password", required = true)
     private String password;
 
     @ValidEmail
-    @JsonProperty("email")
+    @JsonProperty(value = "email", required = true)
     private String email;
 
-    @Nullable
-    @JsonProperty("access_role")
+    @JsonProperty(value = "access_role", required = true)
 //    @ValidEnum(enumClass = AccessRole.class)
     @EnumConverter
     private AccessRole accessRole;

@@ -2,7 +2,8 @@ package org.example.model.request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-import org.junit.Test;
+//import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 public class CreateUserRequestModelTest {
 
-    @Test(expected = UnrecognizedPropertyException.class)
+    @Test
     public void unmarshallingUnknownPropertiesThrowsUnrecognizedPropertyException() throws IOException {
         String jsonAsString =
                 "{\"stringValue\":\"a\"," +

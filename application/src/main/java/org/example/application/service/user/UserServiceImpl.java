@@ -105,8 +105,10 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
                 .addresses(List.of())
                 .build();
         user = userRepository.createUser(user);
-        for (var addressRequest : createUserRequestModel.getAddresses()) {
-            userAddressService.addAddress(user.getHandle(), addressRequest);
+        if (createUserRequestModel.getAddresses() != null) {
+            for (var addressRequest : createUserRequestModel.getAddresses()) {
+                userAddressService.addAddress(user.getHandle(), addressRequest);
+            }
         }
 
         notificationService.sendMessage(EventType.USER_CREATED, user);
