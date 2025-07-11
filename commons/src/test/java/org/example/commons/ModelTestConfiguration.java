@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.commons;
 
 import org.springframework.context.annotation.Configuration;
 

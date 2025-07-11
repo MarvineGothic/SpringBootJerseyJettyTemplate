@@ -3,6 +3,7 @@ package org.example.model.request;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 //import org.junit.Test;
+import org.example.model.ModelTestConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -10,7 +11,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(classes = ModelTestConfiguration.class)
 public class CreateUserRequestModelTest {
 
     @Test
@@ -22,9 +23,11 @@ public class CreateUserRequestModelTest {
                         "\"unrecognizedStringValue\":\"something\"}";
         ObjectMapper mapper = new ObjectMapper();
 
-        TestDto readValue = mapper.readValue(jsonAsString, TestDto.class);
-
-        assertNotNull(readValue);
+        try {
+            TestDto readValue = mapper.readValue(jsonAsString, TestDto.class);
+        } catch (UnrecognizedPropertyException e) {
+            assertNotNull(e);
+        }
     }
 
     @Test

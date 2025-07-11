@@ -13,13 +13,13 @@ import org.example.model.request.CreateUserRequestModel;
 import org.example.model.request.UserLoginRequestModel;
 import org.example.model.response.UserResponseModel;
 import org.flywaydb.core.Flyway;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,7 +28,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class UserResourceTest {
@@ -43,7 +43,7 @@ public class UserResourceTest {
     private URI uri;
     private Client client;
 
-    @Before
+    @BeforeEach
     public void setUp() throws URISyntaxException {
         uri = new URI("http://localhost:" + port);
         client = ClientBuilder.newClient();

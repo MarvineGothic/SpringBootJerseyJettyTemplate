@@ -49,7 +49,7 @@ class CreateUserRequestModelValidationTest {
                 .containsExactlyInAnyOrder(
                         Tuple.tuple("firstName", "must not be blank"),
                         Tuple.tuple("lastName", "must not be blank"),
-                        Tuple.tuple("password", "must not be blank"),
+                        Tuple.tuple("password", "Invalid password"),
                         Tuple.tuple("email", "Invalid email")
                 );
     }
