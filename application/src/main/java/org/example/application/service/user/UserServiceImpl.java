@@ -52,8 +52,26 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
         }
 
         return UserSessionResponseModel.builder()
-                .sessionToken(jwtAuthenticationService.generateToken(user.getHandle(), user.getEmail(), user.getAccessRole().name()))
+                .accessToken(jwtAuthenticationService.generateAccessToken(user.getHandle(), user.getEmail(), user.getAccessRole().name()))
+                .refreshToken(jwtAuthenticationService.generateRefreshToken(user.getHandle(), user.getEmail(), user.getAccessRole().name()))
                 .build();
+    }
+
+    @Override
+    public UserSessionResponseModel refreshToken(String refreshToken) {
+        var authUser = jwtAuthenticationService.authenticateRefreshToken(refreshToken);
+        if (authUser == null) {
+            throw new ServiceException("Invalid refresh token", HttpStatus.FORBIDDEN.value());
+        }
+
+        var response = UserSessionResponseModel.builder()
+                .accessToken(jwtAuthenticationService.generateAccessToken(authUser.handle(), authUser.email(), authUser.role()))
+                .refreshToken(jwtAuthenticationService.generateRefreshToken(authUser.handle(), authUser.email(), authUser.role()))
+                .build();
+
+        // invalidate refresh token
+
+        return response;
     }
 
     @Deprecated
@@ -67,7 +85,7 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
         }
 
         return UserSessionResponseModel.builder()
-                .sessionToken(basicAuthenticationService.generateToken(user.getEmail(), user.getPassword()))
+                .accessToken(basicAuthenticationService.generateToken(user.getEmail(), user.getPassword()))
                 .build();
     }
 

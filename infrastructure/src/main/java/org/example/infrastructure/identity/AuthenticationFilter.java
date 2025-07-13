@@ -59,7 +59,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 authUser = basicAuthenticationService.authenticate(token);
             } else if (authHeader.startsWith(BEARER_AUTH_PREFIX)) {
                 String token = authHeader.replace(BEARER_AUTH_PREFIX, "");
-                authUser = jwtAuthenticationService.authenticate(token);
+                authUser = jwtAuthenticationService.authenticateAccessToken(token);
             }
 
             if (authUser == null) {

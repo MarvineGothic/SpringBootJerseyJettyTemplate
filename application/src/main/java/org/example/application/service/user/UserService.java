@@ -13,10 +13,17 @@ import java.util.Set;
 // Use Case Input Port
 public interface UserService {
     UserSessionResponseModel login(UserLoginRequestModel userLoginRequestModel);
+
+    UserSessionResponseModel refreshToken(String refreshToken);
+
     @Deprecated
     UserSessionResponseModel loginBasic(UserLoginRequestModel userLoginRequestModel);
+
     List<UserResponseModel> getUsers();
+
     UserResponseModel getUser(String handle);
+
     UserResponseModel createUser(CreateUserRequestModel createUserRequestModel) throws ServiceException;
+
     Set<AddressResponseModel> getUserAddresses(String handle);
 }

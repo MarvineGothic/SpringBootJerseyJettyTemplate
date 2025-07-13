@@ -69,13 +69,6 @@ public class UserResource {
         return userService.getUserAddresses(handle);
     }
 
-    @POST
-    @Path("/login")
-    @Produces(MediaType.APPLICATION_JSON)
-    public UserSessionResponseModel userLogin(@RequestBody @Valid @NotNull UserLoginRequestModel userLoginRequestModel) {
-        return userService.login(userLoginRequestModel);
-    }
-
     @Deprecated
     @POST
     @Path("/login/basic")

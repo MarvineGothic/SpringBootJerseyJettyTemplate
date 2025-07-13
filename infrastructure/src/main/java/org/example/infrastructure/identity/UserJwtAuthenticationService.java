@@ -25,43 +25,79 @@ import java.util.Date;
 public class UserJwtAuthenticationService implements JwtAuthenticationService {
     private final ObjectMapper objectMapper;
 
-    @Value("${jwt.secret}")
-    private String secretKey;
+    @Value("${jwt.access.secret}")
+    private String accessSecret;
 
-    @Value("${jwt.expiration}")
-    private String expirationSeconds;
+    @Value("${jwt.refresh.secret}")
+    private String refreshSecret;
+
+    @Value("${jwt.access.expiration}")
+    private String accessTokenExpirationSeconds;
+
+    @Value("${jwt.refresh.expiration}")
+    private String refreshTokenExpirationSeconds;
 
     @Value("${spring.application.name}")
     private String issuer;
 
-    private SecretKey signingKey;
+    private SecretKey accessKey;
+    private SecretKey refreshKey;
 
     @PostConstruct
     public void init() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        this.signingKey = Keys.hmacShaKeyFor(keyBytes);
+        byte[] accessKeyBytes = Decoders.BASE64.decode(accessSecret);
+        byte[] refreshKeyBytes = Decoders.BASE64.decode(refreshSecret);
+        this.accessKey = Keys.hmacShaKeyFor(accessKeyBytes);
+        this.refreshKey = Keys.hmacShaKeyFor(refreshKeyBytes);
     }
 
     @Override
-    public String generateToken(String userName, String email, String role) {
+    public String generateAccessToken(String userName, String email, String role) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .header()
                 .type("JWT")
                 .and()
+                .issuer(issuer)
                 .subject(userName)
                 .issuedAt(Date.from(now))
-                .expiration(Date.from(now.plusSeconds(Long.parseLong(expirationSeconds))))
+                .expiration(Date.from(now.plusSeconds(Long.parseLong(accessTokenExpirationSeconds))))
                 .claim("email", email)
                 .claim("role", role)
-                .signWith(signingKey)
+                .signWith(accessKey)
                 .compact();
     }
 
     @Override
-    public AuthUser authenticate(String token) {
+    public String generateRefreshToken(String userName, String email, String role) {
+        Instant now = Instant.now();
+        return Jwts.builder()
+                .header()
+                .type("JWT")
+                .and()
+                .issuer(issuer)
+                .subject(userName)
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plusSeconds(Long.parseLong(refreshTokenExpirationSeconds))))
+                .claim("email", email)
+                .claim("role", role)
+                .signWith(refreshKey)
+                .compact();
+    }
+
+    @Override
+    public AuthUser authenticateAccessToken(String token) {
+        return authenticate(token, accessKey);
+    }
+
+    @Override
+    public AuthUser authenticateRefreshToken(String token) {
+        return authenticate(token, refreshKey);
+    }
+
+    private AuthUser authenticate(String token, SecretKey secretKey) {
         try {
-            var payload = validateToken(token).getPayload();
+            var payload = validateToken(token, secretKey).getPayload();
 
             return AuthUser.builder()
                     .handle(payload.getSubject())
@@ -74,9 +110,9 @@ public class UserJwtAuthenticationService implements JwtAuthenticationService {
         }
     }
 
-    private Jws<Claims> validateToken(String token) {
+    private Jws<Claims> validateToken(String token, SecretKey secretKey) {
         return Jwts.parser()
-                .verifyWith(signingKey)
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token);
     }

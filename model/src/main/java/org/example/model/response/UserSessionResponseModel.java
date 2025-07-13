@@ -10,6 +10,9 @@ import org.example.model.AbstractResponseDto;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserSessionResponseModel extends AbstractResponseDto {
-    @JsonProperty("session_token")
-    String sessionToken;
+    @JsonProperty("access_token")
+    String accessToken;
+
+    @JsonProperty("refresh_token")
+    String refreshToken;
 }
