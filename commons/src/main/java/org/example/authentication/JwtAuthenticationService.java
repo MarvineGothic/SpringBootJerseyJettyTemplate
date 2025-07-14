@@ -1,8 +1,12 @@
 package org.example.authentication;
 
+import lombok.Builder;
+
 public interface JwtAuthenticationService {
-    String generateAccessToken(String userName, String email, String role);
-    String generateRefreshToken(String userName, String email, String role);
     AuthUser authenticateAccessToken(String token);
-    AuthUser authenticateRefreshToken(String token);
+    TokenSet rotateRefreshToken(String oldToken);
+    TokenSet generateTokenSet(String handle, String email, String role);
+
+    @Builder
+    record TokenSet(String accessToken, String refreshToken) {}
 }

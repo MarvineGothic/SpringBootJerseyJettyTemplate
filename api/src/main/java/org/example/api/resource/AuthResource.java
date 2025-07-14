@@ -13,13 +13,17 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.NewCookie;
 import lombok.RequiredArgsConstructor;
 import org.example.application.service.user.UserService;
+import org.example.error.ServiceException;
 import org.example.model.request.UserLoginRequestModel;
 import org.example.model.response.UserSessionResponseModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.time.Duration;
 
 @Tag(name = "Authentication")
 @ApiResponses(value = {
@@ -35,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthResource {
     private final UserService userService;
     private final static String DOMAIN_NAME = "localhost";
+    private final static String REFRESH_TOKEN = "refresh_token";
 
     @POST
     @Path("/login")
@@ -43,17 +48,46 @@ public class AuthResource {
                                               @Context HttpServletResponse servletResponse) {
         var response = userService.login(userLoginRequestModel);
 
-        NewCookie refreshCookie = new NewCookie("refreshToken", response.getRefreshToken(),
-                "/api/v1/auth", DOMAIN_NAME, null, 7 * 24 * 60 * 60, true, true);
+        setRefreshTokenCookie(servletResponse, response.getRefreshToken());
 
-        servletResponse.addHeader("Set-Cookie", refreshCookie.toString());
         return response;
     }
 
     @POST
     @Path("/refresh")
     @Produces(MediaType.APPLICATION_JSON)
-    public UserSessionResponseModel refreshToken(@NotBlank @CookieParam("refreshToken") String refreshToken) {
-        return userService.refreshToken(refreshToken);
+    public UserSessionResponseModel refreshToken(@NotBlank @CookieParam(REFRESH_TOKEN) String refreshToken,
+                                                 @Context HttpServletResponse servletResponse) {
+        var responseModel = userService.refreshToken(refreshToken);
+        if (responseModel == null) {
+            removeRefreshTokenCookie(servletResponse);
+            throw new ServiceException("Invalid refresh token", HttpStatus.UNAUTHORIZED.value());
+        }
+
+        setRefreshTokenCookie(servletResponse, responseModel.getRefreshToken());
+
+        return responseModel;
+    }
+
+    private void setRefreshTokenCookie(HttpServletResponse response, String token) {
+        ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN, token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/api/v1/auth")
+                .domain(DOMAIN_NAME)
+                .maxAge(Duration.ofDays(7))
+                .build();
+        response.setHeader("Set-Cookie", cookie.toString());
+    }
+
+    private void removeRefreshTokenCookie(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN, "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/api/v1/auth") // MUST match the original cookie path
+                .maxAge(0)     // Remove immediately
+                .build();
+
+        response.setHeader("Set-Cookie", cookie.toString());
     }
 }

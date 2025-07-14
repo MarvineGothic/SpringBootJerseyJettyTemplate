@@ -51,27 +51,25 @@ public class UserServiceImpl implements UserService { // Use Case Interactor
             throw new ServiceException("Bad credentials", HttpStatus.BAD_REQUEST.value());
         }
 
+        var tokenSet = jwtAuthenticationService.generateTokenSet(user.getHandle(), user.getEmail(), user.getAccessRole().name());
+
         return UserSessionResponseModel.builder()
-                .accessToken(jwtAuthenticationService.generateAccessToken(user.getHandle(), user.getEmail(), user.getAccessRole().name()))
-                .refreshToken(jwtAuthenticationService.generateRefreshToken(user.getHandle(), user.getEmail(), user.getAccessRole().name()))
+                .accessToken(tokenSet.accessToken())
+                .refreshToken(tokenSet.refreshToken())
                 .build();
     }
 
     @Override
     public UserSessionResponseModel refreshToken(String refreshToken) {
-        var authUser = jwtAuthenticationService.authenticateRefreshToken(refreshToken);
-        if (authUser == null) {
-            throw new ServiceException("Invalid refresh token", HttpStatus.FORBIDDEN.value());
+        var tokenSet = jwtAuthenticationService.rotateRefreshToken(refreshToken);
+        if (tokenSet == null) {
+            return null;
         }
 
-        var response = UserSessionResponseModel.builder()
-                .accessToken(jwtAuthenticationService.generateAccessToken(authUser.handle(), authUser.email(), authUser.role()))
-                .refreshToken(jwtAuthenticationService.generateRefreshToken(authUser.handle(), authUser.email(), authUser.role()))
+        return UserSessionResponseModel.builder()
+                .accessToken(tokenSet.accessToken())
+                .refreshToken(tokenSet.refreshToken())
                 .build();
-
-        // invalidate refresh token
-
-        return response;
     }
 
     @Deprecated

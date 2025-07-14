@@ -1,6 +1,5 @@
 package org.example.infrastructure.identity;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -12,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.authentication.AuthUser;
 import org.example.authentication.JwtAuthenticationService;
+import org.example.error.ServiceException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -23,7 +24,7 @@ import java.util.Date;
 @Slf4j
 @RequiredArgsConstructor
 public class UserJwtAuthenticationService implements JwtAuthenticationService {
-    private final ObjectMapper objectMapper;
+    private final RefreshTokenService refreshTokenService;
 
     @Value("${jwt.access.secret}")
     private String accessSecret;
@@ -52,7 +53,50 @@ public class UserJwtAuthenticationService implements JwtAuthenticationService {
     }
 
     @Override
-    public String generateAccessToken(String userName, String email, String role) {
+    public TokenSet generateTokenSet(String handle, String email, String role) {
+        var accessToken = generateAccessToken(handle, email, role);
+        var refreshToken = generateRefreshToken(handle, email, role);
+
+        refreshTokenService.saveRefreshToken(handle, refreshToken);
+
+        return TokenSet.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    @Override
+    public AuthUser authenticateAccessToken(String token) {
+        AuthUser authUser;
+        try {
+            authUser = authenticateToken(token, accessKey);
+            if (!refreshTokenService.validateRefreshToken(authUser.handle())) {
+                return null;
+            }
+        } catch (ServiceException e) {
+            return null;
+        }
+
+        return authUser;
+    }
+
+    @Override
+    public TokenSet rotateRefreshToken(String oldToken) {
+        var authUser = authenticateRefreshToken(oldToken);
+        var refreshToken = generateRefreshToken(authUser.handle(), authUser.email(), authUser.role());
+
+        var res = refreshTokenService.rotateRefreshToken(refreshToken, oldToken);
+        if (!res) {
+            return null;
+        }
+
+        return TokenSet.builder()
+                .accessToken(generateRefreshToken(authUser.handle(), authUser.email(), authUser.role()))
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    private String generateAccessToken(String userName, String email, String role) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .header()
@@ -68,8 +112,7 @@ public class UserJwtAuthenticationService implements JwtAuthenticationService {
                 .compact();
     }
 
-    @Override
-    public String generateRefreshToken(String userName, String email, String role) {
+    private String generateRefreshToken(String userName, String email, String role) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .header()
@@ -85,19 +128,13 @@ public class UserJwtAuthenticationService implements JwtAuthenticationService {
                 .compact();
     }
 
-    @Override
-    public AuthUser authenticateAccessToken(String token) {
-        return authenticate(token, accessKey);
+    private AuthUser authenticateRefreshToken(String token) {
+        return authenticateToken(token, refreshKey);
     }
 
-    @Override
-    public AuthUser authenticateRefreshToken(String token) {
-        return authenticate(token, refreshKey);
-    }
-
-    private AuthUser authenticate(String token, SecretKey secretKey) {
+    private AuthUser authenticateToken(String token, SecretKey secretKey) {
         try {
-            var payload = validateToken(token, secretKey).getPayload();
+            var payload = validateJwtToken(token, secretKey).getPayload();
 
             return AuthUser.builder()
                     .handle(payload.getSubject())
@@ -105,12 +142,12 @@ public class UserJwtAuthenticationService implements JwtAuthenticationService {
                     .role(payload.get("role", String.class))
                     .build();
         } catch (JwtException e) {
-            log.error("\nInvalid jwt: {}", e.toString());
-            return null;
+            log.error("\nInvalid jwt: {}. Error: {}", token, e.toString());
+            throw new ServiceException("Invalid token", HttpStatus.UNAUTHORIZED.value());
         }
     }
 
-    private Jws<Claims> validateToken(String token, SecretKey secretKey) {
+    private Jws<Claims> validateJwtToken(String token, SecretKey secretKey) {
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
